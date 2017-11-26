@@ -4,6 +4,7 @@ import com.floriantoenjes.tudo.category.Category;
 import com.floriantoenjes.tudo.todo.location.Location;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -14,18 +15,26 @@ public class Todo {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotNull
     private String name;
 
     private String description;
 
     private Long progress;
 
+    @NotNull
     private boolean completed;
 
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
+    @Temporal(TemporalType.TIMESTAMP)
     private Date dueDate;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastUpdated;
+
+    @Temporal(TemporalType.TIMESTAMP)
     private Date completedAt;
 
     @OneToOne
@@ -36,6 +45,16 @@ public class Todo {
 
     @ManyToMany(mappedBy = "todos")
     private List<Category> categories;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = new Date();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        lastUpdated = new Date();
+    }
 
     public Long getId() {
         return id;
@@ -93,6 +112,14 @@ public class Todo {
         this.dueDate = dueDate;
     }
 
+    public Date getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
     public Date getCompletedAt() {
         return completedAt;
     }
@@ -124,4 +151,6 @@ public class Todo {
     public void setCategories(List<Category> categories) {
         this.categories = categories;
     }
+
+
 }
