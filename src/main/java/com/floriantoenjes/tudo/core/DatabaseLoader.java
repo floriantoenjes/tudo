@@ -18,5 +18,8 @@ public class DatabaseLoader implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         Todo todo1 = new Todo();
+        todo1.setName("Todo1");
+
+        todoRepository.save(todo1);
     }
 }
