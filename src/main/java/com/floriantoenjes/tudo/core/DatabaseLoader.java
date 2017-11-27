@@ -29,9 +29,6 @@ public class DatabaseLoader implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        Todo todo1 = new Todo();
-        todo1.setName("Todo1");
-        todo1.setCreatedAt(new Date());
 
         Role role_user = new Role("ROLE_USER");
         roleRepository.save(role_user);
@@ -44,6 +41,11 @@ public class DatabaseLoader implements ApplicationRunner {
         user.addRole(role_user);
 
         userRepository.save(user);
+
+        Todo todo1 = new Todo();
+        todo1.setName("Todo1");
+        todo1.setCreatedAt(new Date());
+        todo1.setCreator(user);
 
         todoRepository.save(todo1);
     }

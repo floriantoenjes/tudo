@@ -1,5 +1,6 @@
 package com.floriantoenjes.tudo.todo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.floriantoenjes.tudo.category.Category;
 import com.floriantoenjes.tudo.todo.location.Location;
 import com.floriantoenjes.tudo.user.User;
@@ -48,6 +49,8 @@ public class Todo {
     private List<Category> categories;
 
     @ManyToOne
+    @NotNull
+    @JsonIgnore
     private User creator;
 
     @PrePersist
