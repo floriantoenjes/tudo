@@ -47,6 +47,15 @@ public class DatabaseLoader implements ApplicationRunner {
 
         userRepository.save(user);
 
+        User user2 = new User();
+        user2.setUsername("user2");
+        user2.setEmail("email2@email.com");
+        user2.setPassword("password");
+
+        user2.addRole(role_user);
+
+        userRepository.save(user2);
+
         TodoList todoList1 = new TodoList();
         todoList1.setCreator(user);
         todoList1.setName("TodoList1");
@@ -55,7 +64,7 @@ public class DatabaseLoader implements ApplicationRunner {
         Todo todo1 = new Todo();
         todo1.setName("Todo1");
         todo1.setCreatedAt(new Date());
-        todo1.setCreator(user);
+        todo1.setCreator(user2);
 
         todoList1.addTodo(todo1);
         todoRepository.save(todo1);
