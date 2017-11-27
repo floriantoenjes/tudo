@@ -4,6 +4,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -14,13 +16,17 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotNull
     private String username;
 
+    @NotNull
     private String email;
 
+    @NotNull
     private String password;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
+    @NotNull
     private List<Role> roles;
 
     @Override
@@ -78,5 +84,21 @@ public class User implements UserDetails {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+
+    public boolean addRole(Role role) {
+        if (roles == null) {
+            roles = new ArrayList<>();
+        }
+
+        return roles.add(role);
     }
 }
