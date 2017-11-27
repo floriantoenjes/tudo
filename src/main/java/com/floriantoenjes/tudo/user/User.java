@@ -1,6 +1,7 @@
 package com.floriantoenjes.tudo.user;
 
 import com.floriantoenjes.tudo.todo.Todo;
+import com.floriantoenjes.tudo.todo.TodoList;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -29,6 +30,9 @@ public class User implements UserDetails {
     @ManyToMany(fetch = FetchType.EAGER)
     @NotNull
     private List<Role> roles;
+
+    @OneToMany(mappedBy = "creator")
+    private List<TodoList> todoLists;
 
     @OneToMany(mappedBy = "creator")
     private List<Todo> todos;

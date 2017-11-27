@@ -1,6 +1,9 @@
 package com.floriantoenjes.tudo.todo;
 
+import com.floriantoenjes.tudo.user.User;
+
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -14,6 +17,9 @@ public class TodoList {
 
     @OneToMany(mappedBy = "todoList")
     private List<Todo> todos;
+
+    @ManyToOne
+    private User creator;
 
     public Long getId() {
         return id;
@@ -37,5 +43,23 @@ public class TodoList {
 
     public void setTodos(List<Todo> todos) {
         this.todos = todos;
+    }
+
+    public boolean addTodo(Todo todo) {
+        if (todos == null) {
+            todos = new ArrayList<>();
+        }
+
+        todo.setTodoList(this);
+
+        return todos.add(todo);
+    }
+
+    public User getCreator() {
+        return creator;
+    }
+
+    public void setCreator(User creator) {
+        this.creator = creator;
     }
 }

@@ -1,6 +1,8 @@
 package com.floriantoenjes.tudo.core;
 
 import com.floriantoenjes.tudo.todo.Todo;
+import com.floriantoenjes.tudo.todo.TodoList;
+import com.floriantoenjes.tudo.todo.TodoListRepository;
 import com.floriantoenjes.tudo.todo.TodoRepository;
 import com.floriantoenjes.tudo.user.Role;
 import com.floriantoenjes.tudo.user.RoleRepository;
@@ -17,12 +19,15 @@ public class DatabaseLoader implements ApplicationRunner {
 
     private RoleRepository roleRepository;
 
+    private TodoListRepository todoListRepository;
+
     private TodoRepository todoRepository;
 
     private UserRepository userRepository;
 
-    public DatabaseLoader(RoleRepository roleRepository, TodoRepository todoRepository, UserRepository userRepository) {
+    public DatabaseLoader(RoleRepository roleRepository, TodoListRepository todoListRepository, TodoRepository todoRepository, UserRepository userRepository) {
         this.roleRepository = roleRepository;
+        this.todoListRepository = todoListRepository;
         this.todoRepository = todoRepository;
         this.userRepository = userRepository;
     }
@@ -42,11 +47,17 @@ public class DatabaseLoader implements ApplicationRunner {
 
         userRepository.save(user);
 
+        TodoList todoList1 = new TodoList();
+        todoList1.setCreator(user);
+        todoList1.setName("TodoList1");
+        todoListRepository.save(todoList1);
+
         Todo todo1 = new Todo();
         todo1.setName("Todo1");
         todo1.setCreatedAt(new Date());
         todo1.setCreator(user);
 
+        todoList1.addTodo(todo1);
         todoRepository.save(todo1);
     }
 }
