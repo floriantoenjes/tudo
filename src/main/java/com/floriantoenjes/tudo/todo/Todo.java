@@ -2,6 +2,7 @@ package com.floriantoenjes.tudo.todo;
 
 import com.floriantoenjes.tudo.category.Category;
 import com.floriantoenjes.tudo.todo.location.Location;
+import com.floriantoenjes.tudo.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -45,6 +46,9 @@ public class Todo {
 
     @ManyToMany(mappedBy = "todos")
     private List<Category> categories;
+
+    @ManyToOne
+    private User creator;
 
     @PrePersist
     protected void onCreate() {
@@ -152,5 +156,11 @@ public class Todo {
         this.categories = categories;
     }
 
+    public User getCreator() {
+        return creator;
+    }
 
+    public void setCreator(User creator) {
+        this.creator = creator;
+    }
 }

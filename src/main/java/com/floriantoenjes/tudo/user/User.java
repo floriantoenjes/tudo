@@ -1,5 +1,6 @@
 package com.floriantoenjes.tudo.user;
 
+import com.floriantoenjes.tudo.todo.Todo;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -28,6 +29,9 @@ public class User implements UserDetails {
     @ManyToMany(fetch = FetchType.EAGER)
     @NotNull
     private List<Role> roles;
+
+    @OneToMany(mappedBy = "creator")
+    private List<Todo> todos;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
