@@ -7,6 +7,7 @@ import com.floriantoenjes.tudo.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -165,5 +166,13 @@ public class Todo {
 
     public void setCreator(User creator) {
         this.creator = creator;
+    }
+
+    public boolean addCategory(Category category) {
+        if (categories == null) {
+            categories = new ArrayList<>();
+        }
+        category.addTodo(this);
+        return categories.add(category);
     }
 }

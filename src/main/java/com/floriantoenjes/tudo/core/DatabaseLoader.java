@@ -1,5 +1,7 @@
 package com.floriantoenjes.tudo.core;
 
+import com.floriantoenjes.tudo.category.Category;
+import com.floriantoenjes.tudo.category.CategoryRepository;
 import com.floriantoenjes.tudo.todo.Todo;
 import com.floriantoenjes.tudo.todo.TodoList;
 import com.floriantoenjes.tudo.todo.TodoListRepository;
@@ -17,6 +19,8 @@ import java.util.Date;
 @Component
 public class DatabaseLoader implements ApplicationRunner {
 
+    private CategoryRepository categoryRepository;
+
     private RoleRepository roleRepository;
 
     private TodoListRepository todoListRepository;
@@ -25,7 +29,8 @@ public class DatabaseLoader implements ApplicationRunner {
 
     private UserRepository userRepository;
 
-    public DatabaseLoader(RoleRepository roleRepository, TodoListRepository todoListRepository, TodoRepository todoRepository, UserRepository userRepository) {
+    public DatabaseLoader(CategoryRepository categoryRepository, RoleRepository roleRepository, TodoListRepository todoListRepository, TodoRepository todoRepository, UserRepository userRepository) {
+        this.categoryRepository = categoryRepository;
         this.roleRepository = roleRepository;
         this.todoListRepository = todoListRepository;
         this.todoRepository = todoRepository;
@@ -61,12 +66,18 @@ public class DatabaseLoader implements ApplicationRunner {
         todoList1.setName("TodoList1");
         todoListRepository.save(todoList1);
 
+        Category category = new Category();
+        category.setName("Category1");
+
+
         Todo todo1 = new Todo();
         todo1.setName("Todo1");
         todo1.setCreatedAt(new Date());
         todo1.setCreator(user2);
+        todo1.addCategory(category);
 
         todoList1.addTodo(todo1);
         todoRepository.save(todo1);
+        categoryRepository.save(category);
     }
 }

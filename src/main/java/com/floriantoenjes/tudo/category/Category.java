@@ -3,6 +3,7 @@ package com.floriantoenjes.tudo.category;
 import com.floriantoenjes.tudo.todo.Todo;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -39,5 +40,12 @@ public class Category {
 
     public void setTodos(List<Todo> todos) {
         this.todos = todos;
+    }
+
+    public boolean addTodo(Todo todo) {
+        if (todos == null) {
+            todos = new ArrayList<>();
+        }
+        return todos.add(todo);
     }
 }
