@@ -40,7 +40,7 @@ public class Todo {
     @Temporal(TemporalType.TIMESTAMP)
     private Date completedAt;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Location location;
 
     @ManyToOne
