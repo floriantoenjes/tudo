@@ -35,7 +35,7 @@ public class User implements UserDetails {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @NotNull
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonIgnore
     private List<Role> roles;
 
     @OneToMany(mappedBy = "creator")
