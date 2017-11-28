@@ -1,5 +1,6 @@
 package com.floriantoenjes.tudo.todo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.floriantoenjes.tudo.user.User;
 
 import javax.persistence.*;
@@ -19,6 +20,7 @@ public class TodoList {
     private List<Todo> todos;
 
     @ManyToOne
+    @JsonIgnore
     private User creator;
 
     public Long getId() {
