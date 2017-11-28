@@ -1,5 +1,7 @@
 package com.floriantoenjes.tudo.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.floriantoenjes.tudo.todo.Todo;
 import com.floriantoenjes.tudo.todo.TodoList;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,6 +16,8 @@ import java.util.List;
 @Entity
 public class User implements UserDetails {
 
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -22,13 +26,16 @@ public class User implements UserDetails {
     private String username;
 
     @NotNull
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String email;
 
     @NotNull
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @NotNull
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<Role> roles;
 
     @OneToMany(mappedBy = "creator")
@@ -38,26 +45,31 @@ public class User implements UserDetails {
     private List<Todo> todos;
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonExpired() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonLocked() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isEnabled() {
         return true;
     }
