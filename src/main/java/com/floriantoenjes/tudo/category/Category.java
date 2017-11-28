@@ -15,7 +15,7 @@ public class Category {
 
     private String name;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "categories")
     private List<Todo> todos;
 
     public Long getId() {

@@ -46,7 +46,7 @@ public class Todo {
     @ManyToOne
     private TodoList todoList;
 
-    @ManyToMany(mappedBy = "todos")
+    @ManyToMany
     private List<Category> categories;
 
     @ManyToOne
