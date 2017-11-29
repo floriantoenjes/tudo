@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -58,8 +59,8 @@ public class TodoListAndTodoIntegrationTest {
         testUser = createTestUser("test_user");
     }
 
-    // ToDo: Might dirty context
     @Test
+    @DirtiesContext
     public void shouldAddTodoToTodoList() throws Exception {
         createTestTodoList("test_todo_list");
         createTestTodo("test_todo");
