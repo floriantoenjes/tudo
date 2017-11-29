@@ -3,14 +3,13 @@ package com.floriantoenjes.tudo.todo;
 import com.floriantoenjes.tudo.user.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface TodoListRepository extends CrudRepository<TodoList, Long> {
 
     @Override
-    @PostAuthorize("returnObject.creator.username == authentication.name")
+    @PostAuthorize("returnObject != null && returnObject.creator.username == authentication.name")
     TodoList findOne(Long aLong);
 
     @Override
@@ -26,7 +25,7 @@ public interface TodoListRepository extends CrudRepository<TodoList, Long> {
     void delete(Long aLong);
 
     @Override
-    @PreAuthorize("#entity.creator.username == authentication.name")
+    @PreAuthorize("#entity != null && #entity.creator.username == authentication.name")
     void delete(@Param("entity") TodoList entity);
 
     @Override
@@ -37,7 +36,7 @@ public interface TodoListRepository extends CrudRepository<TodoList, Long> {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     void deleteAll();
 
-    @PreAuthorize("#creator.username == authentication.name")
+    @PreAuthorize("#creator != null && #creator.username == authentication.name")
     Iterable<TodoList> findAllByCreator(@Param("creator") User creator);
 
 }
