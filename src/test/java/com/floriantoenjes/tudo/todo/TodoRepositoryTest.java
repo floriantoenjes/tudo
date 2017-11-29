@@ -42,5 +42,17 @@ public class TodoRepositoryTest {
                 .andExpect(MockMvcResultMatchers.status().is(403));
     }
 
+    @Test
+    public void findAllByCreatorShouldReturnUnauthorized() throws Exception {
+        mockMvc.perform(get("/api/v1/todos/search/findAllByCreator?creator=/api/v1/users/2"))
+                .andExpect(MockMvcResultMatchers.status().is(403));
+    }
+
+    @Test
+    public void findAllByCreatorShouldReturnTodos() throws Exception {
+        mockMvc.perform(get("/api/v1/todos/search/findAllByCreator?creator=/api/v1/users/1")
+        .with(httpBasic("user", "password")))
+                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
+    }
 
 }
