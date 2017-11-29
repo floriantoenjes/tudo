@@ -77,8 +77,7 @@ public class TodoRepositoryTest {
         mockMvc.perform(get("/api/v1/todos/search/findAllByCreator?creator=/api/v1/users/1")
                 .with(httpBasic("user", "password")))
                 .andExpect(MockMvcResultMatchers.status().is(200))
-                .andExpect(MockMvcResultMatchers.content().contentType("application/hal+json;charset=UTF-8"))
-                .andDo(MockMvcResultHandlers.print());
+                .andExpect(MockMvcResultMatchers.content().contentType("application/hal+json;charset=UTF-8"));
     }
 
 
@@ -93,8 +92,7 @@ public class TodoRepositoryTest {
     public void findAllByCreatorAndTagsWithCorrectUserAndNotExistingTagShouldReturnEmpty() throws Exception {
         mockMvc.perform(get("/api/v1/todos/search/findAllByCreatorAndTags?creator=/api/v1/users/1&tag=invalid")
                 .with(httpBasic("user", "password")))
-                .andExpect(MockMvcResultMatchers.status().is(404))
-                .andDo(MockMvcResultHandlers.print());
+                .andExpect(MockMvcResultMatchers.status().is(404));
     }
 
     @Test
