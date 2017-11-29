@@ -47,6 +47,7 @@ public class TodoListRepositoryTest {
     }
 
     @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     public void findOneWithCorrectUserShouldReturnTodo() throws Exception {
         mockMvc.perform(get("/api/v1/todoLists/1").with(httpBasic("user", "password")))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -67,7 +68,7 @@ public class TodoListRepositoryTest {
     }
 
     @Test
-    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     public void deleteWithCorrectUserShouldReturnOk() throws Exception {
         mockMvc.perform(delete("/api/v1/todoLists/1").with(httpBasic("user", "password")))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
