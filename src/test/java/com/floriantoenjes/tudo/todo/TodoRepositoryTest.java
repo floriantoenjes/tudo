@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -16,6 +17,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @RunWith(SpringRunner.class)
@@ -41,34 +43,48 @@ public class TodoRepositoryTest {
     @Test
     public void findOneWithWrongUserShouldReturnUnauthorized() throws Exception {
         mockMvc.perform(get("/api/v1/todos/1").with(httpBasic("user2", "password")))
-                .andExpect(MockMvcResultMatchers.status().is(403));
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
     @Test
     public void findOneWithCorrectUserShouldReturnTodo() throws Exception {
         mockMvc.perform(get("/api/v1/todos/1").with(httpBasic("user", "password")))
-                .andExpect(MockMvcResultMatchers.status().is(200))
+                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("application/hal+json;charset=UTF-8"));
+    }
+
+
+    @Test
+    public void deleteWithWrongUserShouldReturnUnauthorized() throws Exception {
+        mockMvc.perform(delete("/api/v1/todos/1").with(httpBasic("user2", "password")))
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    public void deleteWithCorrectUserShouldReturnOk() throws Exception {
+        mockMvc.perform(delete("/api/v1/todos/1").with(httpBasic("user", "password")))
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
 
     @Test
     public void findAllWithUserRoleShouldReturnUnauthorized() throws Exception {
         mockMvc.perform(get("/api/v1/todos").with(httpBasic("user", "password")))
-                .andExpect(MockMvcResultMatchers.status().is(403));
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
 
     @Test
     public void findAllByCreatorWithoutUserShouldReturnUnauthorized() throws Exception {
         mockMvc.perform(get("/api/v1/todos/search/findAllByCreator?creator=/api/v1/users/2"))
-                .andExpect(MockMvcResultMatchers.status().is(403));
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test
     public void findAllByCreatorWithWrongUserShouldReturnUnauthorized() throws Exception {
         mockMvc.perform(get("/api/v1/todos/search/findAllByCreator?creator=/api/v1/users/1")
                 .with(httpBasic("user2", "password")))
-                .andExpect(MockMvcResultMatchers.status().is(403))
+                .andExpect(MockMvcResultMatchers.status().isForbidden())
                 .andDo(MockMvcResultHandlers.print());
     }
 
@@ -76,7 +92,7 @@ public class TodoRepositoryTest {
     public void findAllByCreatorWithCorrectUserShouldReturnTodos() throws Exception {
         mockMvc.perform(get("/api/v1/todos/search/findAllByCreator?creator=/api/v1/users/1")
                 .with(httpBasic("user", "password")))
-                .andExpect(MockMvcResultMatchers.status().is(200))
+                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("application/hal+json;charset=UTF-8"));
     }
 
@@ -85,21 +101,21 @@ public class TodoRepositoryTest {
     public void findAllByCreatorAndTagsWithWrongUserAndExistingTagShouldReturnUnauthorized() throws Exception {
         mockMvc.perform(get("/api/v1/todos/search/findAllByCreatorAndTags?creator=/api/v1/users/1&tag=tag")
                 .with(httpBasic("user2", "password")))
-                .andExpect(MockMvcResultMatchers.status().is(403));
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test
     public void findAllByCreatorAndTagsWithCorrectUserAndNotExistingTagShouldReturnEmpty() throws Exception {
         mockMvc.perform(get("/api/v1/todos/search/findAllByCreatorAndTags?creator=/api/v1/users/1&tag=invalid")
                 .with(httpBasic("user", "password")))
-                .andExpect(MockMvcResultMatchers.status().is(404));
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
     public void findAllByCreatorAndTagsWithCorrectUserAndExistingTagShouldReturnTodos() throws Exception {
         mockMvc.perform(get("/api/v1/todos/search/findAllByCreatorAndTags?creator=/api/v1/users/1&tag=tag")
                 .with(httpBasic("user", "password")))
-                .andExpect(MockMvcResultMatchers.status().is(200))
+                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("application/hal+json;charset=UTF-8"));
     }
 
