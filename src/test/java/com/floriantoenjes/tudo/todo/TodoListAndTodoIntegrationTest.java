@@ -43,12 +43,15 @@ public class TodoListAndTodoIntegrationTest {
     // ToDo: Might dirty context
     @Test
     public void shouldAddTodoToTodoList() throws Exception {
-        mockMvc.perform(get("http://localhost/api/v1/todoLists/1/todos").with(httpBasic("user", "password"))
+        mockMvc.perform(get("http://localhost/api/v1/todoLists/1/todos")
+                .with(httpBasic("user", "password"))
         .contentType("application/hal+json;charset=UTF-8"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(jsonPath("$._embedded.todos", hasSize(1)));
 
-        mockMvc.perform(put("/api/v1/todos/3/todoList").with(httpBasic("user", "password")).contentType("text/uri-list")
+        mockMvc.perform(put("/api/v1/todos/3/todoList")
+                .with(httpBasic("user", "password"))
+                .contentType("text/uri-list")
         .content("/api/v1/todoLists/1"))
                 .andExpect(status().isNoContent());
 
@@ -60,5 +63,7 @@ public class TodoListAndTodoIntegrationTest {
     @Test
     public void shouldRemoveTodoFromList() throws Exception {
 
+        mockMvc.perform(delete("/api/v1/todos/3/todoList").with(httpBasic("user", "password")))
+        .andExpect(status().isNoContent());
     }
 }

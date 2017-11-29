@@ -78,7 +78,8 @@ public class DatabaseLoader implements ApplicationRunner {
         todo3.setCreator(user);
         todo3.addTag("tag");
 
-        todoList1.addTodo(todo2);
+        // ToDo: Perhaps throw exception if trying to add a todo to a list from differnt creator
+        todoList1.addTodo(todo1);
 
         todoRepository.save(todo1);
         todoRepository.save(todo2);
