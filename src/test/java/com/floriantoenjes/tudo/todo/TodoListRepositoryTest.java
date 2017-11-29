@@ -10,6 +10,7 @@ import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfig
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -52,6 +53,7 @@ public class TodoListRepositoryTest {
                 .andExpect(MockMvcResultMatchers.content().contentType("application/hal+json;charset=UTF-8"));
     }
 
+
     @Test
     public void findAllWithUserRoleShouldReturnUnauthorized() throws Exception {
         mockMvc.perform(get("/api/v1/todoLists").with(httpBasic("user", "password")))
@@ -69,6 +71,29 @@ public class TodoListRepositoryTest {
     public void deleteWithCorrectUserShouldReturnOk() throws Exception {
         mockMvc.perform(delete("/api/v1/todoLists/1").with(httpBasic("user", "password")))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
+    }
+
+    @Test
+    public void findAllByCreatorWithoutUserShouldReturnUnauthorized() throws Exception {
+        mockMvc.perform(get("/api/v1/todoLists/search/findAllByCreator?creator=/api/v1/users/2"))
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
+    @Test
+    public void findAllByCreatorWithWrongUserShouldReturnUnauthorized() throws Exception {
+        mockMvc.perform(get("/api/v1/todoLists/search/findAllByCreator?creator=/api/v1/users/1")
+                .with(httpBasic("user2", "password")))
+                .andExpect(MockMvcResultMatchers.status().isForbidden())
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+
+    @Test
+    public void findAllByCreatorWithCorrectUserShouldReturnTodos() throws Exception {
+        mockMvc.perform(get("/api/v1/todoLists/search/findAllByCreator?creator=/api/v1/users/1")
+                .with(httpBasic("user", "password")))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/hal+json;charset=UTF-8"));
     }
 
 }

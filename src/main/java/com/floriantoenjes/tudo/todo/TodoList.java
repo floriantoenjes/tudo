@@ -16,7 +16,7 @@ public class TodoList {
 
     private String name;
 
-    @OneToMany(mappedBy = "todoList")
+    @OneToMany(mappedBy = "todoList", cascade = CascadeType.REMOVE)
     private List<Todo> todos;
 
     @ManyToOne
