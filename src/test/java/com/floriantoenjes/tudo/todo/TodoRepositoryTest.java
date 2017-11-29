@@ -38,10 +38,23 @@ public class TodoRepositoryTest {
     }
 
     @Test
-    public void findAllShouldReturnUnauthorized() throws Exception {
+    public void findOneWithWrongUserShouldReturnUnauthorized() throws Exception {
+        mockMvc.perform(get("/api/v1/todos/1").with(httpBasic("user2", "password")))
+                .andExpect(MockMvcResultMatchers.status().is(403));
+    }
+    @Test
+    public void findOneWithCorrectUserShouldReturnTodo() throws Exception {
+        mockMvc.perform(get("/api/v1/todos/1").with(httpBasic("user", "password")))
+                .andExpect(MockMvcResultMatchers.status().is(200));
+    }
+
+
+    @Test
+    public void findAllWithUserRoleShouldReturnUnauthorized() throws Exception {
         mockMvc.perform(get("/api/v1/todos").with(httpBasic("user", "password")))
                 .andExpect(MockMvcResultMatchers.status().is(403));
     }
+
 
     @Test
     public void findAllByCreatorWithoutUserShouldReturnUnauthorized() throws Exception {
