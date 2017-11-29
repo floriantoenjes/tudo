@@ -9,6 +9,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -43,16 +44,25 @@ public class TodoRepositoryTest {
     }
 
     @Test
-    public void findAllByCreatorShouldReturnUnauthorized() throws Exception {
+    public void findAllByCreatorWithoutUserShouldReturnUnauthorized() throws Exception {
         mockMvc.perform(get("/api/v1/todos/search/findAllByCreator?creator=/api/v1/users/2"))
                 .andExpect(MockMvcResultMatchers.status().is(403));
     }
 
     @Test
-    public void findAllByCreatorShouldReturnTodos() throws Exception {
+    public void findAllByCreatorWithWrongUserShouldReturnUnauthorized() throws Exception {
         mockMvc.perform(get("/api/v1/todos/search/findAllByCreator?creator=/api/v1/users/1")
-        .with(httpBasic("user", "password")))
-                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
+                .with(httpBasic("user2", "password")))
+                .andExpect(MockMvcResultMatchers.status().is(403))
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    public void findAllByCreatorWithCorrectUserShouldReturnTodos() throws Exception {
+        mockMvc.perform(get("/api/v1/todos/search/findAllByCreator?creator=/api/v1/users/1")
+                .with(httpBasic("user", "password")))
+                .andExpect(MockMvcResultMatchers.status().is(200))
+                .andDo(MockMvcResultHandlers.print());
     }
 
 }
