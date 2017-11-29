@@ -6,6 +6,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.util.List;
+
 public interface TodoRepository extends CrudRepository<Todo, Long> {
 
     @Override
@@ -41,6 +43,6 @@ public interface TodoRepository extends CrudRepository<Todo, Long> {
 
 
     @PreAuthorize("#creator != null && #creator.username == authentication.name")
-    Todo findAllByCreatorAndTags(@Param("creator") User creator, @Param("tag") String tag);
+    Iterable<Todo> findAllByCreatorAndTags(@Param("creator") User creator, @Param("tag") String tag);
 
 }
