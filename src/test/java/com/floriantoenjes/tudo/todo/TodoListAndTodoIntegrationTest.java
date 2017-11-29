@@ -10,11 +10,15 @@ import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfig
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.hamcrest.Matchers.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -38,8 +42,12 @@ public class TodoListAndTodoIntegrationTest {
 
     @Test
     public void shouldAddTodoToTodoList() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/todos/3/todoList").with(httpBasic("user", "password")).contentType("text/uri-list")
+        mockMvc.perform(get("/api/v1/todoLists/1").with(httpBasic("user", "password"))
+        .contentType("application/hal+json;charset=UTF-8")).andDo(MockMvcResultHandlers.print())
+                .andExpect(jsonPath("$.name", is("TodoList1")));
+
+        mockMvc.perform(put("/api/v1/todos/3/todoList").with(httpBasic("user", "password")).contentType("text/uri-list")
         .content("/api/v1/todoLists/1"))
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
+                .andExpect(status().isNoContent());
     }
 }
