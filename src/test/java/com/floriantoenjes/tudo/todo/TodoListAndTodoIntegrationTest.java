@@ -62,8 +62,14 @@ public class TodoListAndTodoIntegrationTest {
 
     @Test
     public void shouldRemoveTodoFromList() throws Exception {
+        mockMvc.perform(get("/api/v1/todos/1/todoList").with(httpBasic("user", "password")))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/hal+json;charset=UTF-8"));
 
-        mockMvc.perform(delete("/api/v1/todos/3/todoList").with(httpBasic("user", "password")))
+        mockMvc.perform(delete("/api/v1/todos/1/todoList").with(httpBasic("user", "password")))
         .andExpect(status().isNoContent());
+
+        mockMvc.perform(get("/api/v1/todos/1/todoList").with(httpBasic("user", "password")))
+                .andExpect(status().isNotFound());
     }
 }
