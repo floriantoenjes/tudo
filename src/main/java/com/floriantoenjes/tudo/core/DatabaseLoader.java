@@ -10,11 +10,13 @@ import com.floriantoenjes.tudo.user.User;
 import com.floriantoenjes.tudo.user.UserRepository;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
 @Component
+@Profile("!test")
 public class DatabaseLoader implements ApplicationRunner {
 
     private RoleRepository roleRepository;
