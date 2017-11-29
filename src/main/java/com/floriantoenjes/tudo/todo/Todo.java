@@ -1,7 +1,6 @@
 package com.floriantoenjes.tudo.todo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.floriantoenjes.tudo.category.Category;
 import com.floriantoenjes.tudo.todo.location.Location;
 import com.floriantoenjes.tudo.user.User;
 
@@ -40,14 +39,14 @@ public class Todo {
     @Temporal(TemporalType.TIMESTAMP)
     private Date completedAt;
 
+    @ElementCollection(targetClass = String.class)
+    private List<String> tags;
+
     @OneToOne(cascade = CascadeType.ALL)
     private Location location;
 
     @ManyToOne
     private TodoList todoList;
-
-    @ManyToMany
-    private List<Category> categories;
 
     @ManyToOne
     @NotNull
@@ -152,14 +151,6 @@ public class Todo {
         this.todoList = todoList;
     }
 
-    public List<Category> getCategories() {
-        return categories;
-    }
-
-    public void setCategories(List<Category> categories) {
-        this.categories = categories;
-    }
-
     public User getCreator() {
         return creator;
     }
@@ -168,11 +159,18 @@ public class Todo {
         this.creator = creator;
     }
 
-    public boolean addCategory(Category category) {
-        if (categories == null) {
-            categories = new ArrayList<>();
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
+    public boolean addTag(String tag) {
+        if (tags == null) {
+            tags = new ArrayList<>();
         }
-        category.addTodo(this);
-        return categories.add(category);
+        return tags.add(tag);
     }
 }

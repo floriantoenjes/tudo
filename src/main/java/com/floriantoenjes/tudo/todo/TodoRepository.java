@@ -9,7 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 public interface TodoRepository extends CrudRepository<Todo, Long> {
 
     @Override
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     Iterable<Todo> findAll();
 
     @Override
@@ -39,5 +39,8 @@ public interface TodoRepository extends CrudRepository<Todo, Long> {
     @PreAuthorize("#creator != null && #creator.username == authentication.name")
     Iterable<Todo> findAllByCreator(@Param("creator") User creator);
 
+
+    @PreAuthorize("#creator != null && #creator.username == authentication.name")
+    Todo findAllByCreatorAndTags(@Param("creator") User creator, @Param("tag") String tag);
 
 }
