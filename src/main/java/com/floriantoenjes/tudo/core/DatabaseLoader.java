@@ -72,10 +72,16 @@ public class DatabaseLoader implements ApplicationRunner {
         todo2.setCreatedAt(new Date());
         todo2.setCreator(user2);
 
-        todoList1.addTodo(todo1);
+        Todo todo3 = new Todo();
+        todo3.setName("Todo3");
+        todo3.setCreatedAt(new Date());
+        todo3.setCreator(user);
+        todo3.addTag("tag");
+
 //        todoList1.addTodo(todo2);
 
         todoRepository.save(todo1);
         todoRepository.save(todo2);
+        todoRepository.save(todo3);
     }
 }

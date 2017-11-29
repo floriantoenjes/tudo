@@ -14,6 +14,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @WithMockUser
@@ -36,7 +38,8 @@ public class TodoListAndTodoIntegrationTest {
 
     @Test
     public void shouldAddTodoToTodoList() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/todoLists/1").contentType("text/uri-list"))
-                .andExpect(MockMvcResultMatchers.status().isCreated());
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/todos/3/todoList").with(httpBasic("user", "password")).contentType("text/uri-list")
+        .content("/api/v1/todoLists/1"))
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 }
