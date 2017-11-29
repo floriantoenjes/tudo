@@ -42,12 +42,17 @@ public class TodoListAndTodoIntegrationTest {
 
     @Test
     public void shouldAddTodoToTodoList() throws Exception {
-        mockMvc.perform(get("/api/v1/todoLists/1").with(httpBasic("user", "password"))
+        mockMvc.perform(get("http://localhost/api/v1/todoLists/1/todos").with(httpBasic("user", "password"))
         .contentType("application/hal+json;charset=UTF-8")).andDo(MockMvcResultHandlers.print())
-                .andExpect(jsonPath("$.name", is("TodoList1")));
+                .andExpect(jsonPath("$._embedded.todos", hasSize(0)));
+
 
         mockMvc.perform(put("/api/v1/todos/3/todoList").with(httpBasic("user", "password")).contentType("text/uri-list")
         .content("/api/v1/todoLists/1"))
                 .andExpect(status().isNoContent());
+
+        mockMvc.perform(get("http://localhost/api/v1/todoLists/1/todos").with(httpBasic("user", "password"))
+                .contentType("application/hal+json;charset=UTF-8")).andDo(MockMvcResultHandlers.print())
+                .andExpect(jsonPath("$._embedded.todos", hasSize(1)));
     }
 }
