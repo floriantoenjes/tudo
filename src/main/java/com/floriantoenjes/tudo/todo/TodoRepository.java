@@ -10,11 +10,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 public interface TodoRepository extends CrudRepository<Todo, Long> {
 
     @Override
-    @Secured("ROLE_ADMIN")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     Iterable<Todo> findAll();
 
     @Override
-    @Secured("ROLE_ADMIN")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     Iterable<Todo> findAll(Iterable<Long> longs);
 
     @Override
@@ -26,15 +26,15 @@ public interface TodoRepository extends CrudRepository<Todo, Long> {
     void delete(@Param("entity") Todo entity);
 
     @Override
-    @Secured("ROLE_ADMIN")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     void delete(Long aLong);
 
     @Override
-    @Secured("ROLE_ADMIN")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     void delete(Iterable<? extends Todo> entities);
 
     @Override
-    @Secured("ROLE_ADMIN")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     void deleteAll();
 
     @PreAuthorize("#creator != null && #creator.username == authentication.name")
