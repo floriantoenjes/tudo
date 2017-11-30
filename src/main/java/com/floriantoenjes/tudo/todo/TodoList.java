@@ -28,6 +28,13 @@ public class TodoList {
     @JsonIgnore
     private User creator;
 
+    public TodoList() {
+    }
+
+    public TodoList(String name) {
+        this.name = name;
+    }
+
     public boolean addTodo(Todo todo) throws UnauthorizedException {
         if (!creator.equals(todo.getCreator())) {
             throw new UnauthorizedException("Todo list author must be the same as todo author");

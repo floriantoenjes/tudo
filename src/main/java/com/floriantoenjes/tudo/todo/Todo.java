@@ -57,6 +57,13 @@ public class Todo {
     @JsonIgnore
     private User creator;
 
+    public Todo() {
+    }
+
+    public Todo(String name) {
+        this.name = name;
+    }
+
     @PrePersist
     protected void onCreate() {
         createdAt = new Date();

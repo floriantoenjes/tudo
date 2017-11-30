@@ -37,43 +37,29 @@ public class DatabaseLoader implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
-        Role role_user = new Role("ROLE_USER");
-        roleRepository.save(role_user);
+        Role roleUser = new Role("ROLE_USER");
+        roleRepository.save(roleUser);
 
-        User user = new User();
-        user.setUsername("user");
-        user.setEmail("email@email.com");
-        user.setPassword("password");
-
-        user.addRole(role_user);
-
+        User user = new User("user", "email@email.com", "password");
+        user.addRole(roleUser);
         userRepository.save(user);
 
-        User user2 = new User();
-        user2.setUsername("user2");
-        user2.setEmail("email2@email.com");
-        user2.setPassword("password");
-
-        user2.addRole(role_user);
-
+        User user2 = new User("user2", "email2@email.com", "password");
+        user2.addRole(roleUser);
         userRepository.save(user2);
 
-        TodoList todoList1 = new TodoList();
+        TodoList todoList1 = new TodoList("TodoList1");
         todoList1.setCreator(user);
-        todoList1.setName("TodoList1");
         todoListRepository.save(todoList1);
 
-        Todo todo1 = new Todo();
-        todo1.setName("Todo1");
+        Todo todo1 = new Todo("Todo1");
         todo1.setCreator(user);
         todo1.addTag("tag");
 
-        Todo todo2 = new Todo();
-        todo2.setName("Todo2");
+        Todo todo2 = new Todo("Todo2");
         todo2.setCreator(user2);
 
-        Todo todo3 = new Todo();
-        todo3.setName("Todo3");
+        Todo todo3 = new Todo("Todo3");
         todo3.setCreator(user);
         todo3.addTag("tag");
 

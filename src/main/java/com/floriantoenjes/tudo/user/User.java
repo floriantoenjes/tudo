@@ -45,6 +45,15 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "creator")
     private List<Todo> todos;
 
+    public User() {
+    }
+
+    public User(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
+
     @Override
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
