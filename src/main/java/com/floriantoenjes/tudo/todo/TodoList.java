@@ -2,6 +2,7 @@ package com.floriantoenjes.tudo.todo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.floriantoenjes.tudo.user.User;
+import com.floriantoenjes.tudo.util.UnauthorizedException;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -47,7 +48,10 @@ public class TodoList {
         this.todos = todos;
     }
 
-    public boolean addTodo(Todo todo) {
+    public boolean addTodo(Todo todo) throws UnauthorizedException {
+        if (!creator.equals(todo.getCreator())) {
+            throw new UnauthorizedException("Todo list author must be the same as todo author");
+        }
         if (todos == null) {
             todos = new ArrayList<>();
         }
