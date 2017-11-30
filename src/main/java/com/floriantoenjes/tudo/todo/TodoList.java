@@ -3,11 +3,15 @@ package com.floriantoenjes.tudo.todo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.floriantoenjes.tudo.user.User;
 import com.floriantoenjes.tudo.util.UnauthorizedException;
+import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
+@ToString(exclude = "todos")
 @Entity
 public class TodoList {
 
@@ -24,30 +28,6 @@ public class TodoList {
     @JsonIgnore
     private User creator;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<Todo> getTodos() {
-        return todos;
-    }
-
-    public void setTodos(List<Todo> todos) {
-        this.todos = todos;
-    }
-
     public boolean addTodo(Todo todo) throws UnauthorizedException {
         if (!creator.equals(todo.getCreator())) {
             throw new UnauthorizedException("Todo list author must be the same as todo author");
@@ -61,11 +41,4 @@ public class TodoList {
         return todos.add(todo);
     }
 
-    public User getCreator() {
-        return creator;
-    }
-
-    public void setCreator(User creator) {
-        this.creator = creator;
-    }
 }
