@@ -5,8 +5,6 @@ import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-
 @Component
 @RepositoryEventHandler(Todo.class)
 public class TodoEventHandler {
@@ -20,7 +18,6 @@ public class TodoEventHandler {
     @HandleBeforeCreate
     public void addCreatorBasedOnLoggedInUser(Todo todo) {
         todo.setCreator(userUtils.getUser());
-        todo.setCreatedAt(new Date());
     }
 
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.floriantoenjes.tudo.todo.location.Location;
 import com.floriantoenjes.tudo.user.User;
 import lombok.Data;
+import lombok.NonNull;
 import lombok.ToString;
 
 import javax.persistence.*;
