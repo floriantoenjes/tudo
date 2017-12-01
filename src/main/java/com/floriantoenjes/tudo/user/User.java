@@ -51,6 +51,9 @@ public class User implements UserDetails {
     @ManyToMany(mappedBy = "assignedUsers")
     private List<Todo> assignedTodos;
 
+    @ManyToMany
+    private List<User> contacts;
+
     public User() {
     }
 
@@ -103,5 +106,12 @@ public class User implements UserDetails {
             assignedTodos = new ArrayList<>();
         }
         return assignedTodos.add(todo);
+    }
+
+    public boolean addContact(User contact) {
+        if (contacts == null) {
+            contacts = new ArrayList<>();
+        }
+        return contacts.add(contact);
     }
 }

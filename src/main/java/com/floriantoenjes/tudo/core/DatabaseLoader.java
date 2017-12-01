@@ -68,5 +68,8 @@ public class DatabaseLoader implements ApplicationRunner {
         todoRepository.save(todo1);
         todoRepository.save(todo2);
         todoRepository.save(todo3);
+
+        user.addContact(user2);
+        userRepository.save(user);
     }
 }
