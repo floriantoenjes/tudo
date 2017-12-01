@@ -24,10 +24,12 @@ public class User implements UserDetails {
     private Long id;
 
     @NotNull
+    @Column(unique = true)
     private String username;
 
     @NotNull
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Column(unique = true)
     private String email;
 
     @NotNull
