@@ -16,7 +16,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Data
-@ToString(exclude = {"todos", "todoLists"})
+@ToString(exclude = {"todos", "todoLists", "assignedTodos"})
 @Entity
 public class User implements UserDetails {
 
