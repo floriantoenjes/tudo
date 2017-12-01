@@ -48,6 +48,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "creator")
     private List<Todo> todos;
 
+    @ManyToMany(mappedBy = "assignedUsers")
+    private List<Todo> assignedTodos;
+
     public User() {
     }
 
@@ -95,4 +98,10 @@ public class User implements UserDetails {
         return roles.add(role);
     }
 
+    public boolean addAssignedTodo(Todo todo) {
+        if (assignedTodos == null) {
+            assignedTodos = new ArrayList<>();
+        }
+        return assignedTodos.add(todo);
+    }
 }
