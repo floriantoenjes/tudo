@@ -6,8 +6,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
-import java.util.List;
-
 public interface TodoRepository extends CrudRepository<Todo, Long> {
 
     @Override

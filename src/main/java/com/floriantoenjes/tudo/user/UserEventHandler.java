@@ -1,6 +1,5 @@
 package com.floriantoenjes.tudo.user;
 
-import com.floriantoenjes.tudo.todo.TodoList;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;

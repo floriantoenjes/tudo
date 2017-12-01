@@ -1,9 +1,6 @@
 package com.floriantoenjes.tudo.user;
 
 import lombok.Data;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.Entity;
