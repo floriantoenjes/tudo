@@ -25,7 +25,7 @@ public class TodoAssignmentValidator implements ConstraintValidator<ValidateAssi
                 .anyMatch(assignedUser -> assignedUser.equals(todo.getCreator()))) {
             return false;
         } else if (contacts != null && contacts.size() != 0 && assignedUsers.stream()
-                .noneMatch(assignedUser -> todo.getCreator().getContacts().contains(assignedUser))) {
+                .noneMatch(contacts::contains)) {
             return false;
         }
 
