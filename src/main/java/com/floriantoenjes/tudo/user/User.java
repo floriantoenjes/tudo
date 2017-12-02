@@ -2,6 +2,7 @@ package com.floriantoenjes.tudo.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.floriantoenjes.tudo.contactrequest.ContactRequest;
 import com.floriantoenjes.tudo.todo.Todo;
 import com.floriantoenjes.tudo.todo.TodoList;
 import lombok.Data;
@@ -10,6 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.Configuration;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -53,6 +55,12 @@ public class User implements UserDetails {
 
     @ManyToMany
     private List<User> contacts;
+
+    @OneToMany(mappedBy = "sender")
+    private List<ContactRequest> contactRequestsSent;
+
+    @OneToMany(mappedBy = "receiver")
+    private List<ContactRequest> contactRequestsReceived;
 
     public User() {
     }
@@ -113,5 +121,19 @@ public class User implements UserDetails {
             contacts = new ArrayList<>();
         }
         return contacts.add(contact);
+    }
+
+    public boolean addContactRequestSent(ContactRequest contactRequest) {
+        if (contactRequestsSent == null) {
+            contactRequestsSent = new ArrayList<>();
+        }
+        return contactRequestsSent.add(contactRequest);
+    }
+
+    public boolean addContactRequestReceived(ContactRequest contactRequest) {
+        if (contactRequestsReceived == null) {
+            contactRequestsReceived = new ArrayList<>();
+        }
+        return contactRequestsReceived.add(contactRequest);
     }
 }
