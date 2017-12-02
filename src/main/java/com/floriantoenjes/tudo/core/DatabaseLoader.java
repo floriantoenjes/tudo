@@ -13,6 +13,9 @@ import com.floriantoenjes.tudo.user.UserRepository;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -83,6 +86,10 @@ public class DatabaseLoader implements ApplicationRunner {
 
         user.addContact(user2);
         userRepository.save(user);
+
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken("load_user", "load_user",
+                        AuthorityUtils.createAuthorityList("ROLE_USER", "ROLE_ADMIN")));
 
         ContactRequest contactRequest = new ContactRequest();
         contactRequest.setSender(user);

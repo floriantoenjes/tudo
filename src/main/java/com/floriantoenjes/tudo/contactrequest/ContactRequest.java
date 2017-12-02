@@ -16,7 +16,6 @@ public class ContactRequest {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     private Date sendAt;
 
