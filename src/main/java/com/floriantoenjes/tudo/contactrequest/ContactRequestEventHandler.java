@@ -6,10 +6,14 @@ import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
 
 @Component
-@RepositoryEventHandler
+@RepositoryEventHandler(ContactRequest.class)
 public class ContactRequestEventHandler {
 
     private UserUtils userUtils;
+
+    public ContactRequestEventHandler(UserUtils userUtils) {
+        this.userUtils = userUtils;
+    }
 
     @HandleBeforeCreate
     public void addCreatorBasedOnLoggedInUser(ContactRequest contactRequest) {

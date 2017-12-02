@@ -87,7 +87,6 @@ public class DatabaseLoader implements ApplicationRunner {
         ContactRequest contactRequest = new ContactRequest();
         contactRequest.setSender(user);
         contactRequest.setReceiver(user);
-        contactRequest.setSendAt(new Date());
         contactRequestRepository.save(contactRequest);
     }
 }
