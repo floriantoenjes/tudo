@@ -6,7 +6,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 
-public class TodoCreatorValidator implements ConstraintValidator<ValidateAssignedUsers, Object> {
+public class TodoAssignmentValidator implements ConstraintValidator<ValidateAssignedUsers, Object> {
 
     @Override
     public void initialize(ValidateAssignedUsers constraintAnnotation) {
@@ -19,12 +19,12 @@ public class TodoCreatorValidator implements ConstraintValidator<ValidateAssigne
         List<User> assignedUsers = todo.getAssignedUsers();
         List<User> contacts = todo.getCreator().getContacts();
 
-        if (assignedUsers == null) {
+        if (assignedUsers == null || assignedUsers.size() == 0) {
             return true;
         } else if (assignedUsers.stream()
                 .anyMatch(assignedUser -> assignedUser.equals(todo.getCreator()))) {
             return false;
-        } else if (contacts != null && assignedUsers.stream()
+        } else if (contacts != null && contacts.size() != 0 && assignedUsers.stream()
                 .noneMatch(assignedUser -> todo.getCreator().getContacts().contains(assignedUser))) {
             return false;
         }
