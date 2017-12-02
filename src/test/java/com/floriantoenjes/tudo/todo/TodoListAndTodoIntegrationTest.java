@@ -4,7 +4,9 @@ import com.floriantoenjes.tudo.user.RoleRepository;
 import com.floriantoenjes.tudo.user.User;
 import com.floriantoenjes.tudo.user.UserRepository;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.util.NestedServletException;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
@@ -46,6 +49,9 @@ public class TodoListAndTodoIntegrationTest {
     WebApplicationContext context;
 
     private User testUser;
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() throws Exception {
@@ -98,11 +104,33 @@ public class TodoListAndTodoIntegrationTest {
                 .andExpect(status().isNotFound());
     }
 
+    @Test(expected = NestedServletException.class)
+    public void shouldNotAssignUserToTodoButReturnForbidden() throws Exception {
+        Todo todo = createTestTodo("test_todo");
+
+        mockMvc.perform(put("/api/v1/todos/1/assignedUsers")
+                .with(httpBasic("test_user", "password"))
+                .contentType("text/uri-list")
+                .content("/api/v1/users/1"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void shouldAssignUserToTodo() throws Exception {
+        Todo todo = createTestTodo("test_todo");
+        User testUser2 = createTestUser("test_user_2");
+
+        mockMvc.perform(put("/api/v1/todos/1/assignedUsers")
+                .with(httpBasic("test_user", "password"))
+                .contentType("text/uri-list")
+                .content("/api/v1/users/2"))
+                .andExpect(status().isNoContent());
+    }
 
     private User createTestUser(String username) {
         User testUser = new User();
         testUser.setUsername(username);
-        testUser.setEmail("test@email.com");
+        testUser.setEmail(username + "@email.com");
         testUser.setPassword("password");
         testUser.addRole(roleRepository.findByName("ROLE_USER"));
         return userRepository.save(testUser);
