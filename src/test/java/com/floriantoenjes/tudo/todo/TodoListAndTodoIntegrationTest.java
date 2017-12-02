@@ -28,23 +28,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
-@ActiveProfiles("test")
 @SpringBootTest
 @WithMockUser
 public class TodoListAndTodoIntegrationTest {
     private MockMvc mockMvc;
-
-    @Autowired
-    private TodoRepository todoRepository;
-
-    @Autowired
-    private TodoListRepository todoListRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
 
     @Autowired
     WebApplicationContext context;
@@ -63,54 +50,41 @@ public class TodoListAndTodoIntegrationTest {
     @Test
     @DirtiesContext
     public void shouldAddTodoToTodoList() throws Exception {
-        User testUser = createTestUser("test_user");
-        createTestTodoList("test_todo_list", testUser);
-        createTestTodo("test_todo", testUser);
-
         mockMvc.perform(get("http://localhost/api/v1/todoLists/1/todos")
-                .with(httpBasic("test_user", "password"))
+                .with(httpBasic("user", "password"))
         .contentType("application/hal+json;charset=UTF-8"))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(jsonPath("$._embedded.todos", hasSize(0)));
+                .andExpect(jsonPath("$._embedded.todos", hasSize(1)));
 
-        mockMvc.perform(put("/api/v1/todos/1/todoList")
-                .with(httpBasic("test_user", "password"))
+        mockMvc.perform(put("/api/v1/todos/3/todoList")
+                .with(httpBasic("user", "password"))
                 .contentType("text/uri-list")
         .content("/api/v1/todoLists/1"))
                 .andExpect(status().isNoContent());
 
-        mockMvc.perform(get("http://localhost/api/v1/todoLists/1/todos").with(httpBasic("test_user", "password"))
+        mockMvc.perform(get("http://localhost/api/v1/todoLists/1/todos").with(httpBasic("user", "password"))
                 .contentType("application/hal+json;charset=UTF-8")).andDo(MockMvcResultHandlers.print())
-                .andExpect(jsonPath("$._embedded.todos", hasSize(1)));
+                .andExpect(jsonPath("$._embedded.todos", hasSize(2)));
     }
 
     @Test
+    @DirtiesContext
     public void shouldRemoveTodoFromList() throws Exception {
-        User testUser = createTestUser("test_user");
-        TodoList testTodoList = createTestTodoList("test_todo_list", testUser);
-        Todo testTodo = createTestTodo("test_todo", testUser);
-        testTodoList.addTodo(testTodo);
-        todoRepository.save(testTodo);
-
-        mockMvc.perform(get("/api/v1/todos/1/todoList").with(httpBasic("test_user", "password")))
+        mockMvc.perform(get("/api/v1/todos/1/todoList").with(httpBasic("user", "password")))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/hal+json;charset=UTF-8"));
 
-        mockMvc.perform(delete("/api/v1/todos/1/todoList").with(httpBasic("test_user", "password")))
+        mockMvc.perform(delete("/api/v1/todos/1/todoList").with(httpBasic("user", "password")))
         .andExpect(status().isNoContent());
 
-        mockMvc.perform(get("/api/v1/todos/1/todoList").with(httpBasic("test_user", "password")))
+        mockMvc.perform(get("/api/v1/todos/1/todoList").with(httpBasic("user", "password")))
                 .andExpect(status().isNotFound());
     }
 
     @Test(expected = NestedServletException.class)
     public void shouldNotAssignUserToTodoButThrowException() throws Exception {
-        User testUser = createTestUser("test_user");
-        Todo todo = createTestTodo("test_todo", testUser);
-        User testUser2 = createTestUser("test_user_2");
-
         mockMvc.perform(put("/api/v1/todos/1/assignedUsers")
-                .with(httpBasic("test_user", "password"))
+                .with(httpBasic("user", "password"))
                 .contentType("text/uri-list")
                 .content("/api/v1/users/1"))
                 .andExpect(status().isNoContent());
@@ -118,38 +92,11 @@ public class TodoListAndTodoIntegrationTest {
 
     @Test
     public void shouldAssignUserToTodo() throws Exception {
-        User testUser = createTestUser("test_user");
-        Todo todo = createTestTodo("test_todo", testUser);
-        testUser.addContact(createTestUser("test_user_2"));
-        userRepository.save(testUser);
-
         mockMvc.perform(put("/api/v1/todos/1/assignedUsers")
-                .with(httpBasic("test_user", "password"))
+                .with(httpBasic("user", "password"))
                 .contentType("text/uri-list")
                 .content("/api/v1/users/2"))
                 .andExpect(status().isNoContent());
     }
 
-    private User createTestUser(String username) {
-        User testUser = new User();
-        testUser.setUsername(username);
-        testUser.setEmail(username + "@email.com");
-        testUser.setPassword("password");
-        testUser.addRole(roleRepository.findByName("ROLE_USER"));
-        return userRepository.save(testUser);
-    }
-
-    private Todo createTestTodo(String name, User user) {
-        Todo testTodo = new Todo();
-        testTodo.setCreator(user);
-        testTodo.setName(name);
-        return todoRepository.save(testTodo);
-    }
-
-    private TodoList createTestTodoList(String name, User user) {
-        TodoList testTodoList = new TodoList();
-        testTodoList.setName(name);
-        testTodoList.setCreator(user);
-        return todoListRepository.save(testTodoList);
-    }
 }

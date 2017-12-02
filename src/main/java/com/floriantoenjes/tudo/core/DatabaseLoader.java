@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile("!test")
+//@Profile("!test")
 public class DatabaseLoader implements ApplicationRunner {
 
     private RoleRepository roleRepository;
