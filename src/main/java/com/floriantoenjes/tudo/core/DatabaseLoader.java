@@ -46,6 +46,10 @@ public class DatabaseLoader implements ApplicationRunner {
         user2.addRole(roleUser);
         userRepository.save(user2);
 
+        User user3 = new User("user3", "email3@email.com", "password");
+        user3.addRole(roleUser);
+        userRepository.save(user3);
+
         TodoList todoList1 = new TodoList("TodoList1");
         todoList1.setCreator(user);
         todoListRepository.save(todoList1);
