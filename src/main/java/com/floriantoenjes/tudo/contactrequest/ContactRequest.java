@@ -9,13 +9,16 @@ import java.util.Date;
 @Data
 @Entity
 public class ContactRequest {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private Date sendAt;
 
+    @ManyToOne
     private User sender;
 
+    @ManyToOne
     private User receiver;
 }

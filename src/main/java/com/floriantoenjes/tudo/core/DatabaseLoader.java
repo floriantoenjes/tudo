@@ -1,5 +1,7 @@
 package com.floriantoenjes.tudo.core;
 
+import com.floriantoenjes.tudo.contactrequest.ContactRequest;
+import com.floriantoenjes.tudo.contactrequest.ContactRequestRepository;
 import com.floriantoenjes.tudo.todo.Todo;
 import com.floriantoenjes.tudo.todo.TodoList;
 import com.floriantoenjes.tudo.todo.TodoListRepository;
@@ -13,9 +15,14 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+
 @Component
 //@Profile("!test")
 public class DatabaseLoader implements ApplicationRunner {
+
+
+    private ContactRequestRepository contactRequestRepository;
 
     private RoleRepository roleRepository;
 
@@ -25,7 +32,8 @@ public class DatabaseLoader implements ApplicationRunner {
 
     private UserRepository userRepository;
 
-    public DatabaseLoader(RoleRepository roleRepository, TodoListRepository todoListRepository, TodoRepository todoRepository, UserRepository userRepository) {
+    public DatabaseLoader(ContactRequestRepository contactRequestRepository, RoleRepository roleRepository, TodoListRepository todoListRepository, TodoRepository todoRepository, UserRepository userRepository) {
+        this.contactRequestRepository = contactRequestRepository;
         this.roleRepository = roleRepository;
         this.todoListRepository = todoListRepository;
         this.todoRepository = todoRepository;
@@ -75,5 +83,11 @@ public class DatabaseLoader implements ApplicationRunner {
 
         user.addContact(user2);
         userRepository.save(user);
+
+        ContactRequest contactRequest = new ContactRequest();
+        contactRequest.setSender(user);
+        contactRequest.setReceiver(user);
+        contactRequest.setSendAt(new Date());
+        contactRequestRepository.save(contactRequest);
     }
 }
