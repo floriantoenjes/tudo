@@ -16,7 +16,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Data
-@ToString(exclude = {"todos", "todoLists"})
+@ToString(exclude = {"todos", "todoLists", "assignedTodos"})
 @Entity
 public class User implements UserDetails {
 
@@ -47,6 +47,12 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "creator")
     private List<Todo> todos;
+
+    @ManyToMany(mappedBy = "assignedUsers")
+    private List<Todo> assignedTodos;
+
+    @ManyToMany
+    private List<User> contacts;
 
     public User() {
     }
@@ -95,4 +101,17 @@ public class User implements UserDetails {
         return roles.add(role);
     }
 
+    public boolean addAssignedTodo(Todo todo) {
+        if (assignedTodos == null) {
+            assignedTodos = new ArrayList<>();
+        }
+        return assignedTodos.add(todo);
+    }
+
+    public boolean addContact(User contact) {
+        if (contacts == null) {
+            contacts = new ArrayList<>();
+        }
+        return contacts.add(contact);
+    }
 }

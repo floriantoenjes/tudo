@@ -4,7 +4,10 @@ import com.floriantoenjes.tudo.user.RoleRepository;
 import com.floriantoenjes.tudo.user.User;
 import com.floriantoenjes.tudo.user.UserRepository;
 import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.util.NestedServletException;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
@@ -24,28 +28,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
-@ActiveProfiles("test")
 @SpringBootTest
 @WithMockUser
 public class TodoListAndTodoIntegrationTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private TodoRepository todoRepository;
-
-    @Autowired
-    private TodoListRepository todoListRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
     WebApplicationContext context;
 
-    private User testUser;
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() throws Exception {
@@ -53,72 +45,58 @@ public class TodoListAndTodoIntegrationTest {
                 .webAppContextSetup(context)
                 .apply(SecurityMockMvcConfigurers.springSecurity())
                 .build();
-
-        testUser = createTestUser("test_user");
     }
 
     @Test
     @DirtiesContext
     public void shouldAddTodoToTodoList() throws Exception {
-        createTestTodoList("test_todo_list");
-        createTestTodo("test_todo");
-
         mockMvc.perform(get("http://localhost/api/v1/todoLists/1/todos")
-                .with(httpBasic("test_user", "password"))
+                .with(httpBasic("user", "password"))
         .contentType("application/hal+json;charset=UTF-8"))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(jsonPath("$._embedded.todos", hasSize(0)));
+                .andExpect(jsonPath("$._embedded.todos", hasSize(1)));
 
-        mockMvc.perform(put("/api/v1/todos/1/todoList")
-                .with(httpBasic("test_user", "password"))
+        mockMvc.perform(put("/api/v1/todos/3/todoList")
+                .with(httpBasic("user", "password"))
                 .contentType("text/uri-list")
         .content("/api/v1/todoLists/1"))
                 .andExpect(status().isNoContent());
 
-        mockMvc.perform(get("http://localhost/api/v1/todoLists/1/todos").with(httpBasic("test_user", "password"))
+        mockMvc.perform(get("http://localhost/api/v1/todoLists/1/todos").with(httpBasic("user", "password"))
                 .contentType("application/hal+json;charset=UTF-8")).andDo(MockMvcResultHandlers.print())
-                .andExpect(jsonPath("$._embedded.todos", hasSize(1)));
+                .andExpect(jsonPath("$._embedded.todos", hasSize(2)));
     }
 
     @Test
+    @DirtiesContext
     public void shouldRemoveTodoFromList() throws Exception {
-        TodoList testTodoList = createTestTodoList("test_todo_list");
-        Todo testTodo = createTestTodo("test_todo");
-        testTodoList.addTodo(testTodo);
-        todoRepository.save(testTodo);
-
-        mockMvc.perform(get("/api/v1/todos/1/todoList").with(httpBasic("test_user", "password")))
+        mockMvc.perform(get("/api/v1/todos/1/todoList").with(httpBasic("user", "password")))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/hal+json;charset=UTF-8"));
 
-        mockMvc.perform(delete("/api/v1/todos/1/todoList").with(httpBasic("test_user", "password")))
+        mockMvc.perform(delete("/api/v1/todos/1/todoList").with(httpBasic("user", "password")))
         .andExpect(status().isNoContent());
 
-        mockMvc.perform(get("/api/v1/todos/1/todoList").with(httpBasic("test_user", "password")))
+        mockMvc.perform(get("/api/v1/todos/1/todoList").with(httpBasic("user", "password")))
                 .andExpect(status().isNotFound());
     }
 
-
-    private User createTestUser(String username) {
-        User testUser = new User();
-        testUser.setUsername(username);
-        testUser.setEmail("test@email.com");
-        testUser.setPassword("password");
-        testUser.addRole(roleRepository.findByName("ROLE_USER"));
-        return userRepository.save(testUser);
+    @Test(expected = NestedServletException.class)
+    public void shouldNotAssignUserToTodoButThrowException() throws Exception {
+        mockMvc.perform(put("/api/v1/todos/1/assignedUsers")
+                .with(httpBasic("user", "password"))
+                .contentType("text/uri-list")
+                .content("/api/v1/users/1"))
+                .andExpect(status().isNoContent());
     }
 
-    private Todo createTestTodo(String name) {
-        Todo testTodo = new Todo();
-        testTodo.setCreator(testUser);
-        testTodo.setName(name);
-        return todoRepository.save(testTodo);
+    @Test
+    public void shouldAssignUserToTodo() throws Exception {
+        mockMvc.perform(put("/api/v1/todos/1/assignedUsers")
+                .with(httpBasic("user", "password"))
+                .contentType("text/uri-list")
+                .content("/api/v1/users/2"))
+                .andExpect(status().isNoContent());
     }
 
-    private TodoList createTestTodoList(String name) {
-        TodoList testTodoList = new TodoList();
-        testTodoList.setName(name);
-        testTodoList.setCreator(testUser);
-        return todoListRepository.save(testTodoList);
-    }
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.floriantoenjes.tudo.user.User;
 import com.floriantoenjes.tudo.util.UnauthorizedException;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @Data
 @ToString(exclude = "todos")
+@EqualsAndHashCode(exclude = "todos")
 @Entity
 public class TodoList {
 

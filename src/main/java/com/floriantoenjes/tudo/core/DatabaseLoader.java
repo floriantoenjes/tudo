@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile("!test")
+//@Profile("!test")
 public class DatabaseLoader implements ApplicationRunner {
 
     private RoleRepository roleRepository;
@@ -46,6 +46,10 @@ public class DatabaseLoader implements ApplicationRunner {
         user2.addRole(roleUser);
         userRepository.save(user2);
 
+        User user3 = new User("user3", "email3@email.com", "password");
+        user3.addRole(roleUser);
+        userRepository.save(user3);
+
         TodoList todoList1 = new TodoList("TodoList1");
         todoList1.setCreator(user);
         todoListRepository.save(todoList1);
@@ -63,8 +67,13 @@ public class DatabaseLoader implements ApplicationRunner {
 
         todoList1.addTodo(todo1);
 
+        todo1.assignToUser(user2);
+
         todoRepository.save(todo1);
         todoRepository.save(todo2);
         todoRepository.save(todo3);
+
+        user.addContact(user2);
+        userRepository.save(user);
     }
 }

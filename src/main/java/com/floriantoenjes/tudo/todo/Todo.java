@@ -13,6 +13,7 @@ import java.util.List;
 
 @Data
 @Entity
+@ValidateAssignedUsers
 public class Todo {
 
     @Id
@@ -55,6 +56,9 @@ public class Todo {
     @JsonIgnore
     private User creator;
 
+    @ManyToMany
+    private List<User> assignedUsers;
+
     public Todo() {
     }
 
@@ -77,5 +81,16 @@ public class Todo {
             tags = new ArrayList<>();
         }
         return tags.add(tag);
+    }
+
+    public boolean assignToUser(User assignee) {
+        if (assignedUsers == null) {
+            // ToDo: Change from list to set where necessary
+
+            assignedUsers = new ArrayList<>();
+        }
+        assignee.addAssignedTodo(this);
+
+        return assignedUsers.add(assignee);
     }
 }
