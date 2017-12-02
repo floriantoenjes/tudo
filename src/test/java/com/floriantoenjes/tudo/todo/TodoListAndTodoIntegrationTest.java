@@ -4,6 +4,7 @@ import com.floriantoenjes.tudo.user.RoleRepository;
 import com.floriantoenjes.tudo.user.User;
 import com.floriantoenjes.tudo.user.UserRepository;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -48,8 +49,6 @@ public class TodoListAndTodoIntegrationTest {
     @Autowired
     WebApplicationContext context;
 
-    private User testUser;
-
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
@@ -59,15 +58,14 @@ public class TodoListAndTodoIntegrationTest {
                 .webAppContextSetup(context)
                 .apply(SecurityMockMvcConfigurers.springSecurity())
                 .build();
-
-        testUser = createTestUser("test_user");
     }
 
     @Test
     @DirtiesContext
     public void shouldAddTodoToTodoList() throws Exception {
-        createTestTodoList("test_todo_list");
-        createTestTodo("test_todo");
+        User testUser = createTestUser("test_user");
+        createTestTodoList("test_todo_list", testUser);
+        createTestTodo("test_todo", testUser);
 
         mockMvc.perform(get("http://localhost/api/v1/todoLists/1/todos")
                 .with(httpBasic("test_user", "password"))
@@ -88,8 +86,9 @@ public class TodoListAndTodoIntegrationTest {
 
     @Test
     public void shouldRemoveTodoFromList() throws Exception {
-        TodoList testTodoList = createTestTodoList("test_todo_list");
-        Todo testTodo = createTestTodo("test_todo");
+        User testUser = createTestUser("test_user");
+        TodoList testTodoList = createTestTodoList("test_todo_list", testUser);
+        Todo testTodo = createTestTodo("test_todo", testUser);
         testTodoList.addTodo(testTodo);
         todoRepository.save(testTodo);
 
@@ -105,20 +104,24 @@ public class TodoListAndTodoIntegrationTest {
     }
 
     @Test(expected = NestedServletException.class)
-    public void shouldNotAssignUserToTodoButReturnForbidden() throws Exception {
-        Todo todo = createTestTodo("test_todo");
+    public void shouldNotAssignUserToTodoButThrowException() throws Exception {
+        User testUser = createTestUser("test_user");
+        Todo todo = createTestTodo("test_todo", testUser);
+        User testUser2 = createTestUser("test_user_2");
 
         mockMvc.perform(put("/api/v1/todos/1/assignedUsers")
                 .with(httpBasic("test_user", "password"))
                 .contentType("text/uri-list")
                 .content("/api/v1/users/1"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isNoContent());
     }
 
     @Test
     public void shouldAssignUserToTodo() throws Exception {
-        Todo todo = createTestTodo("test_todo");
-        User testUser2 = createTestUser("test_user_2");
+        User testUser = createTestUser("test_user");
+        Todo todo = createTestTodo("test_todo", testUser);
+        testUser.addContact(createTestUser("test_user_2"));
+        userRepository.save(testUser);
 
         mockMvc.perform(put("/api/v1/todos/1/assignedUsers")
                 .with(httpBasic("test_user", "password"))
@@ -136,17 +139,17 @@ public class TodoListAndTodoIntegrationTest {
         return userRepository.save(testUser);
     }
 
-    private Todo createTestTodo(String name) {
+    private Todo createTestTodo(String name, User user) {
         Todo testTodo = new Todo();
-        testTodo.setCreator(testUser);
+        testTodo.setCreator(user);
         testTodo.setName(name);
         return todoRepository.save(testTodo);
     }
 
-    private TodoList createTestTodoList(String name) {
+    private TodoList createTestTodoList(String name, User user) {
         TodoList testTodoList = new TodoList();
         testTodoList.setName(name);
-        testTodoList.setCreator(testUser);
+        testTodoList.setCreator(user);
         return todoListRepository.save(testTodoList);
     }
 }
