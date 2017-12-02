@@ -136,4 +136,5 @@ public class User implements UserDetails {
         }
         return contactRequestsReceived.add(contactRequest);
     }
+
 }
