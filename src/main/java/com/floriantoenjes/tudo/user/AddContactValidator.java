@@ -25,7 +25,7 @@ public class AddContactValidator implements Validator {
         for (User contact : user.getContacts()) {
             if (contactRequestRepository.findAllBySenderIdAndReceiverId(user.getId(), contact.getId()).size() == 0 &&
                     contactRequestRepository.findAllBySenderIdAndReceiverId(contact.getId(), user.getId()).size() == 0) {
-                errors.reject("noContactRequest", "Contact request has to be present to add a contact");
+                errors.reject("noContactRequest", "Contact request has to be present to add a contact.");
             }
         }
     }
