@@ -95,7 +95,7 @@ public class TodoListAndTodoIntegrationTest {
         mockMvc.perform(put("/api/v1/todos/1/assignedUsers")
                 .with(httpBasic("user", "password"))
                 .contentType("text/uri-list")
-                .content("/api/v1/users/2"))
+                .content("/api/v1/users/3"))
                 .andExpect(status().isNoContent());
     }
 

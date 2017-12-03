@@ -84,7 +84,7 @@ public class DatabaseLoader implements ApplicationRunner {
         todoRepository.save(todo2);
         todoRepository.save(todo3);
 
-        user.addContact(user2);
+        user.addContact(user3);
         userRepository.save(user);
 
         SecurityContextHolder.getContext().setAuthentication(

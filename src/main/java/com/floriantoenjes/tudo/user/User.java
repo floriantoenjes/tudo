@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.floriantoenjes.tudo.contactrequest.ContactRequest;
 import com.floriantoenjes.tudo.todo.Todo;
 import com.floriantoenjes.tudo.todo.TodoList;
+import com.floriantoenjes.tudo.util.NoContactRequestException;
 import lombok.Data;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
@@ -116,10 +117,23 @@ public class User implements UserDetails {
         return assignedTodos.add(todo);
     }
 
-    public boolean addContact(User contact) {
+    public boolean addContact(User contact) throws NoContactRequestException {
         if (contacts == null) {
             contacts = new ArrayList<>();
         }
+
+        if (contactRequestsReceived != null
+                && contactRequestsReceived.stream()
+                .noneMatch(contactRequest -> contact.equals(contactRequest.getSender())) &&
+
+                contactRequestsSent != null
+                && contactRequestsSent.stream()
+                .noneMatch(contactRequest -> contact.equals(contactRequest.getReceiver()))) {
+
+            throw new NoContactRequestException("No contact request for " + contact.getUsername() + " found.");
+
+        }
+
         return contacts.add(contact);
     }
 
