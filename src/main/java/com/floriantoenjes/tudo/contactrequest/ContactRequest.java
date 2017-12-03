@@ -10,7 +10,6 @@ import java.util.Date;
 @Data
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"sender_id", "receiver_id"}))
 @Entity
-@ValidateSentContactRequest
 public class ContactRequest {
 
     @Id
