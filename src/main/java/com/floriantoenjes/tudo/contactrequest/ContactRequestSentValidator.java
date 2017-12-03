@@ -22,11 +22,11 @@ public class ContactRequestSentValidator implements Validator {
     public void validate(Object target, Errors errors) {
         ContactRequest contactRequest = (ContactRequest) target;
 
-        if (contactRequestRepository.findAllBySenderIdAndReceiverId(contactRequest.getSender().getId(),
-                        contactRequest.getReceiver().getId()).stream().findAny().isPresent()
+        if (contactRequestRepository.findBySenderIdAndReceiverId(contactRequest.getSender().getId(),
+                        contactRequest.getReceiver().getId()) != null
 
-                || contactRequestRepository.findAllBySenderIdAndReceiverId(contactRequest.getReceiver().getId(),
-                contactRequest.getSender().getId()).stream().findAny().isPresent()) {
+                || contactRequestRepository.findBySenderIdAndReceiverId(contactRequest.getReceiver().getId(),
+                contactRequest.getSender().getId())  != null) {
 
             errors.reject("exists", "Contact request has already been sent.");
         }

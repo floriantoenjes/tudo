@@ -14,11 +14,11 @@ public interface ContactRequestRepository extends CrudRepository<ContactRequest,
     <S extends ContactRequest> S save(@Param("entity") S entity);
 
     @PreAuthorize("authentication.principal.id == #senderId || authentication.principal.id == #receiverId")
-    List<ContactRequest> findAllBySenderIdAndReceiverId(@Param("senderId") Long senderId, @Param("receiverId") Long receiverId);
+    ContactRequest findBySenderIdAndReceiverId(@Param("senderId") Long senderId, @Param("receiverId") Long receiverId);
 
     @Override
-    @PostAuthorize("returnObject.sender.username == authentication.name " +
-            "|| returnObject.receiver.username == authentication.name")
+    @PostAuthorize("returnObject != null && (returnObject.sender.username == authentication.name " +
+            "|| returnObject.receiver.username == authentication.name)")
     ContactRequest findOne(@Param("contactRequestId") Long aLong);
 
     @Override
@@ -34,7 +34,7 @@ public interface ContactRequestRepository extends CrudRepository<ContactRequest,
     void delete(Long aLong);
 
     @Override
-    @PreAuthorize("#entity.sender.username == authentication.name")
+    @PreAuthorize("#entity.sender.username == authentication.name || #entity.receiver.username == authentication.name")
     void delete(@Param("entity") ContactRequest entity);
 
     @Override

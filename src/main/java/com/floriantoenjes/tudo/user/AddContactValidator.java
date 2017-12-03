@@ -1,5 +1,6 @@
 package com.floriantoenjes.tudo.user;
 
+import com.floriantoenjes.tudo.contactrequest.ContactRequest;
 import com.floriantoenjes.tudo.contactrequest.ContactRequestRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -23,10 +24,17 @@ public class AddContactValidator implements Validator {
     public void validate(Object target, Errors errors) {
         User user = (User) target;
         for (User contact : user.getContacts()) {
-            if (contactRequestRepository.findAllBySenderIdAndReceiverId(user.getId(), contact.getId()).size() == 0 &&
-                    contactRequestRepository.findAllBySenderIdAndReceiverId(contact.getId(), user.getId()).size() == 0) {
-                errors.reject("noContactRequest", "Contact request has to be present to add a contact.");
+            ContactRequest fromUser = contactRequestRepository.findBySenderIdAndReceiverId(user.getId(), contact.getId());
+            if (fromUser != null) {
+                contactRequestRepository.delete(fromUser);
+                return;
+            }
+            ContactRequest toUser = contactRequestRepository.findBySenderIdAndReceiverId(contact.getId(), user.getId());
+            if (toUser != null) {
+                contactRequestRepository.delete(toUser);
+                return;
             }
         }
+        errors.reject("noContactRequest", "Contact request has to be present to add a contact.");
     }
 }
