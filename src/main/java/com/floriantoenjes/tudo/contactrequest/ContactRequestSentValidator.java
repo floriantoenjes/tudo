@@ -28,7 +28,6 @@ public class ContactRequestSentValidator implements Validator {
                 || contactRequestRepository.findAllBySenderIdAndReceiverId(contactRequest.getReceiver().getId(),
                 contactRequest.getSender().getId()).stream().findAny().isPresent()) {
 
-//            errors.rejectValue("receiver", "exists");
             errors.reject("exists", "Contact request has already been sent.");
         }
     }
