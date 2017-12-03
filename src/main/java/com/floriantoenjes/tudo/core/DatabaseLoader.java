@@ -93,7 +93,7 @@ public class DatabaseLoader implements ApplicationRunner {
 
         ContactRequest contactRequest = new ContactRequest();
         contactRequest.setSender(user);
-        contactRequest.setReceiver(user);
+        contactRequest.setReceiver(user2);
         contactRequestRepository.save(contactRequest);
     }
 }
