@@ -73,9 +73,9 @@ public class ContactRequestRepositoryTest {
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
-//    ToDo: Investigate why this test fails with 'user' instead of 'user2'
     @Test
     public void findAllBySenderIdAndReceiverIdWithCorrectUserShouldReturnContactRequests() throws Exception {
+        //    ToDo: Investigate why this test fails with 'user' instead of 'user2'
         mockMvc.perform(get("/api/v1/contactRequests/search/findAllBySenderIdAndReceiverId?senderId=1&receiverId=2").with(httpBasic("user2", "password")))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
