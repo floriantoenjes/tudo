@@ -1,5 +1,7 @@
 package com.floriantoenjes.tudo.core;
 
+import com.floriantoenjes.tudo.contactrequest.ContactRequest;
+import com.floriantoenjes.tudo.contactrequest.ContactRequestRepository;
 import com.floriantoenjes.tudo.todo.Todo;
 import com.floriantoenjes.tudo.todo.TodoList;
 import com.floriantoenjes.tudo.todo.TodoListRepository;
@@ -11,11 +13,19 @@ import com.floriantoenjes.tudo.user.UserRepository;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+
+import java.util.Date;
 
 @Component
 //@Profile("!test")
 public class DatabaseLoader implements ApplicationRunner {
+
+
+    private ContactRequestRepository contactRequestRepository;
 
     private RoleRepository roleRepository;
 
@@ -25,7 +35,8 @@ public class DatabaseLoader implements ApplicationRunner {
 
     private UserRepository userRepository;
 
-    public DatabaseLoader(RoleRepository roleRepository, TodoListRepository todoListRepository, TodoRepository todoRepository, UserRepository userRepository) {
+    public DatabaseLoader(ContactRequestRepository contactRequestRepository, RoleRepository roleRepository, TodoListRepository todoListRepository, TodoRepository todoRepository, UserRepository userRepository) {
+        this.contactRequestRepository = contactRequestRepository;
         this.roleRepository = roleRepository;
         this.todoListRepository = todoListRepository;
         this.todoRepository = todoRepository;
@@ -73,7 +84,16 @@ public class DatabaseLoader implements ApplicationRunner {
         todoRepository.save(todo2);
         todoRepository.save(todo3);
 
-        user.addContact(user2);
+        user.addContact(user3);
         userRepository.save(user);
+
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken("load_user", "load_user",
+                        AuthorityUtils.createAuthorityList("ROLE_USER", "ROLE_ADMIN")));
+
+        ContactRequest contactRequest = new ContactRequest();
+        contactRequest.setSender(user);
+        contactRequest.setReceiver(user2);
+        contactRequestRepository.save(contactRequest);
     }
 }

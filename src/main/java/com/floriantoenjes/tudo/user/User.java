@@ -2,21 +2,25 @@ package com.floriantoenjes.tudo.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.floriantoenjes.tudo.contactrequest.ContactRequest;
 import com.floriantoenjes.tudo.todo.Todo;
 import com.floriantoenjes.tudo.todo.TodoList;
+import com.floriantoenjes.tudo.util.NoContactRequestException;
 import lombok.Data;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.Configuration;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 @Data
-@ToString(exclude = {"todos", "todoLists", "assignedTodos"})
+@ToString(exclude = {"todos", "todoLists", "assignedTodos",
+        "contactRequestsSent", "contactRequestsReceived", "contacts"})
 @Entity
 public class User implements UserDetails {
 
@@ -53,6 +57,12 @@ public class User implements UserDetails {
 
     @ManyToMany
     private List<User> contacts;
+
+    @OneToMany(mappedBy = "sender")
+    private List<ContactRequest> contactRequestsSent;
+
+    @OneToMany(mappedBy = "receiver")
+    private List<ContactRequest> contactRequestsReceived;
 
     public User() {
     }
@@ -108,10 +118,38 @@ public class User implements UserDetails {
         return assignedTodos.add(todo);
     }
 
-    public boolean addContact(User contact) {
+    public boolean addContact(User contact) throws NoContactRequestException {
         if (contacts == null) {
             contacts = new ArrayList<>();
         }
+
+        if (contactRequestsReceived != null
+                && contactRequestsReceived.stream()
+                .noneMatch(contactRequest -> contact.equals(contactRequest.getSender())) &&
+
+                contactRequestsSent != null
+                && contactRequestsSent.stream()
+                .noneMatch(contactRequest -> contact.equals(contactRequest.getReceiver()))) {
+
+            throw new NoContactRequestException("No contact request for " + contact.getUsername() + " found.");
+
+        }
+
         return contacts.add(contact);
     }
+
+    public boolean addContactRequestSent(ContactRequest contactRequest) {
+        if (contactRequestsSent == null) {
+            contactRequestsSent = new ArrayList<>();
+        }
+        return contactRequestsSent.add(contactRequest);
+    }
+
+    public boolean addContactRequestReceived(ContactRequest contactRequest) {
+        if (contactRequestsReceived == null) {
+            contactRequestsReceived = new ArrayList<>();
+        }
+        return contactRequestsReceived.add(contactRequest);
+    }
+
 }
