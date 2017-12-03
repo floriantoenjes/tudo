@@ -13,7 +13,7 @@ import java.util.List;
 
 @Data
 @Entity
-@ValidateAssignedUsers
+//@ValidateAssignedUsers
 public class Todo {
 
     @Id

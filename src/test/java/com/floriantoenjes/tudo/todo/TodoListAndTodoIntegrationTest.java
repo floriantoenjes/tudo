@@ -81,13 +81,13 @@ public class TodoListAndTodoIntegrationTest {
                 .andExpect(status().isNotFound());
     }
 
-    @Test(expected = NestedServletException.class)
-    public void shouldNotAssignUserToTodoButThrowException() throws Exception {
+    @Test
+    public void shouldNotAssignCreatorToTodo() throws Exception {
         mockMvc.perform(put("/api/v1/todos/1/assignedUsers")
                 .with(httpBasic("user", "password"))
                 .contentType("text/uri-list")
                 .content("/api/v1/users/1"))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
