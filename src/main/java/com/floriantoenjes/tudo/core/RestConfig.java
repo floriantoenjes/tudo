@@ -2,6 +2,7 @@ package com.floriantoenjes.tudo.core;
 
 import com.floriantoenjes.tudo.contactrequest.ContactRequestSentValidator;
 import com.floriantoenjes.tudo.todo.TodoAssignmentValidator;
+import com.floriantoenjes.tudo.user.AddContactValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.event.ValidatingRepositoryEventListener;
@@ -17,11 +18,14 @@ public class RestConfig extends RepositoryRestConfigurerAdapter {
     @Resource(name = "defaultValidator")
     private Validator validator;
 
+    private AddContactValidator addContactValidator;
+
     private ContactRequestSentValidator contactRequestSentValidator;
 
     private TodoAssignmentValidator todoAssignmentValidator;
 
-    public RestConfig(ContactRequestSentValidator contactRequestSentValidator, TodoAssignmentValidator todoAssignmentValidator) {
+    public RestConfig(AddContactValidator addContactValidator, ContactRequestSentValidator contactRequestSentValidator, TodoAssignmentValidator todoAssignmentValidator) {
+        this.addContactValidator = addContactValidator;
         this.contactRequestSentValidator = contactRequestSentValidator;
         this.todoAssignmentValidator = todoAssignmentValidator;
     }
@@ -37,5 +41,7 @@ public class RestConfig extends RepositoryRestConfigurerAdapter {
         validatingListener.addValidator("beforeCreate", todoAssignmentValidator);
         validatingListener.addValidator("beforeSave", todoAssignmentValidator);
         validatingListener.addValidator("beforeLinkSave", todoAssignmentValidator);
+
+        validatingListener.addValidator("beforeLinkSave", addContactValidator);
     }
 }
