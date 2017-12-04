@@ -14,7 +14,6 @@ import java.util.List;
 
 @Data
 @Entity
-//@ValidateAssignedUsers
 public class Todo {
 
     @Id
