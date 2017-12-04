@@ -61,6 +61,9 @@ public class DatabaseLoader implements ApplicationRunner {
         user3.addRole(roleUser);
         userRepository.save(user3);
 
+        user.addContact(user3);
+        userRepository.save(user);
+
         TodoList todoList1 = new TodoList("TodoList1");
         todoList1.setCreator(user);
         todoListRepository.save(todoList1);
@@ -78,14 +81,11 @@ public class DatabaseLoader implements ApplicationRunner {
 
         todoList1.addTodo(todo1);
 
-        todo1.assignToUser(user2);
+        todo1.assignToUser(user3);
 
         todoRepository.save(todo1);
         todoRepository.save(todo2);
         todoRepository.save(todo3);
-
-        user.addContact(user3);
-        userRepository.save(user);
 
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken("load_user", "load_user",

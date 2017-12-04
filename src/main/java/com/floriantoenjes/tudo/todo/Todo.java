@@ -3,6 +3,7 @@ package com.floriantoenjes.tudo.todo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.floriantoenjes.tudo.todo.location.Location;
 import com.floriantoenjes.tudo.user.User;
+import com.floriantoenjes.tudo.util.NoContactException;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -83,7 +84,10 @@ public class Todo {
         return tags.add(tag);
     }
 
-    public boolean assignToUser(User assignee) {
+    public boolean assignToUser(User assignee) throws NoContactException {
+        if (creator.getContacts() == null || !creator.getContacts().contains(assignee)) {
+            throw new NoContactException("A todo can only be assigned to contacts of the todo creator.");
+        }
         if (assignedUsers == null) {
             // ToDo: Change from list to set where necessary
 
