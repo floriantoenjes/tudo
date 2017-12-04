@@ -12,13 +12,10 @@ import com.floriantoenjes.tudo.user.User;
 import com.floriantoenjes.tudo.user.UserRepository;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
 
 @Component
 //@Profile("!test")
