@@ -93,4 +93,8 @@ public class Todo {
 
         return assignedUsers.add(assignee);
     }
+
+    public boolean isAssignedToUser(String username) {
+        return assignedUsers.stream().anyMatch(assignedUser -> assignedUser.getUsername().equals(username));
+    }
 }

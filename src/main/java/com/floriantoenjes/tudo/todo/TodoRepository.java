@@ -17,7 +17,8 @@ public interface TodoRepository extends CrudRepository<Todo, Long> {
     Iterable<Todo> findAll(Iterable<Long> longs);
 
     @Override
-    @PostAuthorize("returnObject != null && returnObject.creator.username == authentication.name")
+    @PostAuthorize("returnObject != null && returnObject.creator.username == authentication.name " +
+            "|| returnObject.isAssignedToUser(authentication.name)")
     Todo findOne(Long aLong);
 
     @Override

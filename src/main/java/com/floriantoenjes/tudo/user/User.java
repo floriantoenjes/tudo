@@ -152,4 +152,21 @@ public class User implements UserDetails {
         return contactRequestsReceived.add(contactRequest);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        User user = (User) o;
+
+        return username.equals(user.username);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + username.hashCode();
+        return result;
+    }
 }
