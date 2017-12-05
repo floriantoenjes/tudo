@@ -51,7 +51,7 @@ public class Todo {
     @ManyToMany
     private List<User> assignedUsers;
 
-    @OneToOne(mappedBy = "todo", cascade = CascadeType.PERSIST)
+    @OneToOne(mappedBy = "todo", cascade = CascadeType.ALL)
     private TodoForm todoForm;
 
     public Todo() {
