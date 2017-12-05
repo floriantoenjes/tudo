@@ -42,6 +42,9 @@ public class DatabaseLoader implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken("load_user", "load_user",
+                        AuthorityUtils.createAuthorityList("ROLE_USER", "ROLE_ADMIN")));
 
         Role roleUser = new Role("ROLE_USER");
         roleRepository.save(roleUser);
@@ -83,10 +86,6 @@ public class DatabaseLoader implements ApplicationRunner {
         todoRepository.save(todo1);
         todoRepository.save(todo2);
         todoRepository.save(todo3);
-
-        SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken("load_user", "load_user",
-                        AuthorityUtils.createAuthorityList("ROLE_USER", "ROLE_ADMIN")));
 
         ContactRequest contactRequest = new ContactRequest();
         contactRequest.setSender(user);

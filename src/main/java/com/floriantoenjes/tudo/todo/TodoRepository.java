@@ -8,6 +8,16 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface TodoRepository extends CrudRepository<Todo, Long> {
 
+//    ToDo: Change the access for admins
+
+    @Override
+    @PreAuthorize("#entity.creator.username == authentication.name || hasRole('ROLE_ADMIN')")
+    <S extends Todo> S save(@Param("entity") S entity);
+
+    @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    <S extends Todo> Iterable<S> save(Iterable<S> entities);
+
     @Override
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     Iterable<Todo> findAll();
