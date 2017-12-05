@@ -2,9 +2,11 @@ package com.floriantoenjes.tudo.todo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.floriantoenjes.tudo.todo.location.Location;
+import com.floriantoenjes.tudo.todo.todoform.TodoForm;
 import com.floriantoenjes.tudo.user.User;
 import com.floriantoenjes.tudo.util.NoContactException;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -14,6 +16,7 @@ import java.util.List;
 
 @Data
 @Entity
+@ToString(exclude = "todoForm")
 public class Todo {
 
     @Id
@@ -25,22 +28,11 @@ public class Todo {
 
     private String description;
 
-    private Long progress;
-
-    @NotNull
-    private boolean completed;
-
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date dueDate;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lastUpdated;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date completedAt;
 
     @ElementCollection(targetClass = String.class)
     private List<String> tags;
@@ -59,6 +51,9 @@ public class Todo {
     @ManyToMany
     private List<User> assignedUsers;
 
+    @OneToOne(mappedBy = "todo", cascade = CascadeType.PERSIST)
+    private TodoForm todoForm;
+
     public Todo() {
     }
 
@@ -69,11 +64,8 @@ public class Todo {
     @PrePersist
     protected void onCreate() {
         createdAt = new Date();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        lastUpdated = new Date();
+        todoForm = new TodoForm();
+        todoForm.setTodo(this);
     }
 
     public boolean addTag(String tag) {
