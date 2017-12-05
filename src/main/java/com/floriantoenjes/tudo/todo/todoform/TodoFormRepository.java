@@ -1,13 +1,15 @@
 package com.floriantoenjes.tudo.todo.todoform;
 
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface TodoFormRepository extends CrudRepository<TodoForm, Long> {
     @Override
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    <S extends TodoForm> S save(S entity);
+    @PreAuthorize("#entity.todo.creator.username == authentication.name || " +
+            "#entity.todo.isAssignedToUser(authentication.name) || hasRole('ROLE_ADMIN')")
+    <S extends TodoForm> S save(@Param("entity") S entity);
 
     @Override
     @PreAuthorize("hasRole('ROLE_ADMIN')")
