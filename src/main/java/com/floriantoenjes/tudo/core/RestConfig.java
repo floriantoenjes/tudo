@@ -5,6 +5,7 @@ import com.floriantoenjes.tudo.todo.TodoAssignmentValidator;
 import com.floriantoenjes.tudo.user.AddContactValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.core.event.ValidatingRepositoryEventListener;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurerAdapter;
 import org.springframework.validation.Validator;
@@ -43,5 +44,11 @@ public class RestConfig extends RepositoryRestConfigurerAdapter {
         validatingListener.addValidator("beforeLinkSave", todoAssignmentValidator);
 
         validatingListener.addValidator("beforeLinkSave", addContactValidator);
+    }
+
+    @Override
+    public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
+        config.getCorsRegistry()
+                .addMapping("/**");
     }
 }
