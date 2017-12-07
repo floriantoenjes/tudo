@@ -70,7 +70,9 @@ public class DatabaseLoader implements ApplicationRunner {
 
         Todo todo1 = new Todo("Todo1");
         todo1.setCreator(user);
+        todo1.setDescription("Description of Todo1");
         todo1.addTag("tag");
+        todo1.addTag("tag2");
 
         Todo todo2 = new Todo("Todo2");
         todo2.setCreator(user2);
