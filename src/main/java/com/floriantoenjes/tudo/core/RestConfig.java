@@ -2,6 +2,7 @@ package com.floriantoenjes.tudo.core;
 
 import com.floriantoenjes.tudo.contactrequest.ContactRequestSentValidator;
 import com.floriantoenjes.tudo.todo.TodoAssignmentValidator;
+import com.floriantoenjes.tudo.todo.todoform.TodoForm;
 import com.floriantoenjes.tudo.user.AddContactValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -51,5 +52,7 @@ public class RestConfig extends RepositoryRestConfigurerAdapter {
         config.getCorsRegistry()
                 .addMapping("/**")
                 .allowedMethods("GET", "PUT");
+
+        config.exposeIdsFor(TodoForm.class);
     }
 }
