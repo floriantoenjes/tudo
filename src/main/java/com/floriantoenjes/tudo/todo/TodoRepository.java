@@ -54,6 +54,7 @@ public interface TodoRepository extends CrudRepository<Todo, Long> {
     @PreAuthorize("#creator != null && #creator.username == authentication.name")
     Iterable<Todo> findAllByCreatorAndTags(@Param("creator") User creator, @Param("tag") String tag);
 
+    @PreAuthorize("#assignee.username == authentication.name")
     Iterable<Todo> findAllByAssignedUsersContaining(@Param("assignee") User assignee);
 
 }
