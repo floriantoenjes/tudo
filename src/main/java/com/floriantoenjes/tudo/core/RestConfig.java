@@ -49,6 +49,7 @@ public class RestConfig extends RepositoryRestConfigurerAdapter {
     @Override
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
         config.getCorsRegistry()
-                .addMapping("/**");
+                .addMapping("/**")
+                .allowedMethods("GET", "PUT");
     }
 }
