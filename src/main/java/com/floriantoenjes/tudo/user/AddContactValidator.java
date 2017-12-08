@@ -23,6 +23,11 @@ public class AddContactValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         User user = (User) target;
+
+        if (user.getContacts().size() == 0) {
+            return;
+        }
+
         for (User contact : user.getContacts()) {
             ContactRequest fromUser = contactRequestRepository.findBySenderIdAndReceiverId(user.getId(), contact.getId());
             if (fromUser != null) {
