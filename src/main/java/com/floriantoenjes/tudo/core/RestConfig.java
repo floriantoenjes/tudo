@@ -51,7 +51,7 @@ public class RestConfig extends RepositoryRestConfigurerAdapter {
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
         config.getCorsRegistry()
                 .addMapping("/**")
-                .allowedMethods("GET", "PUT");
+                .allowedMethods("GET", "POST", "PUT");
 
         config.exposeIdsFor(TodoForm.class);
         config.exposeIdsFor(User.class);
