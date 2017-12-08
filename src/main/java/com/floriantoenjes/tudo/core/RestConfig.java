@@ -4,7 +4,7 @@ import com.floriantoenjes.tudo.contactrequest.ContactRequestSentValidator;
 import com.floriantoenjes.tudo.todo.TodoAssignmentValidator;
 import com.floriantoenjes.tudo.todo.todoform.TodoForm;
 import com.floriantoenjes.tudo.user.AddContactValidator;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.floriantoenjes.tudo.user.User;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.core.event.ValidatingRepositoryEventListener;
@@ -54,5 +54,6 @@ public class RestConfig extends RepositoryRestConfigurerAdapter {
                 .allowedMethods("GET", "PUT");
 
         config.exposeIdsFor(TodoForm.class);
+        config.exposeIdsFor(User.class);
     }
 }
