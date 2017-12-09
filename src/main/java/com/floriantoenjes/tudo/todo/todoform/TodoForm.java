@@ -14,7 +14,7 @@ public class TodoForm {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private Long progress;
+    private Long progress = 0L;
 
     private boolean completed;
 
