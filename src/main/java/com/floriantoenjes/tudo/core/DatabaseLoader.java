@@ -42,6 +42,9 @@ public class DatabaseLoader implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken("load_user", "load_user",
+                        AuthorityUtils.createAuthorityList("ROLE_USER", "ROLE_ADMIN")));
 
         Role roleUser = new Role("ROLE_USER");
         roleRepository.save(roleUser);
@@ -58,7 +61,12 @@ public class DatabaseLoader implements ApplicationRunner {
         user3.addRole(roleUser);
         userRepository.save(user3);
 
+        User user4 = new User("user4", "email4@email.com", "password");
+        user4.addRole(roleUser);
+        userRepository.save(user4);
+
         user.addContact(user3);
+        user.addContact(user4);
         userRepository.save(user);
 
         TodoList todoList1 = new TodoList("TodoList1");
@@ -67,7 +75,9 @@ public class DatabaseLoader implements ApplicationRunner {
 
         Todo todo1 = new Todo("Todo1");
         todo1.setCreator(user);
+        todo1.setDescription("Description of Todo1");
         todo1.addTag("tag");
+        todo1.addTag("tag2");
 
         Todo todo2 = new Todo("Todo2");
         todo2.setCreator(user2);
@@ -83,10 +93,6 @@ public class DatabaseLoader implements ApplicationRunner {
         todoRepository.save(todo1);
         todoRepository.save(todo2);
         todoRepository.save(todo3);
-
-        SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken("load_user", "load_user",
-                        AuthorityUtils.createAuthorityList("ROLE_USER", "ROLE_ADMIN")));
 
         ContactRequest contactRequest = new ContactRequest();
         contactRequest.setSender(user);
