@@ -22,6 +22,10 @@ public class ContactRequestSentValidator implements Validator {
     public void validate(Object target, Errors errors) {
         ContactRequest contactRequest = (ContactRequest) target;
 
+        if (contactRequest.getSender() == null || contactRequest.getReceiver() == null) {
+            return;
+        }
+
         if (contactRequestRepository.findBySenderIdAndReceiverId(contactRequest.getSender().getId(),
                         contactRequest.getReceiver().getId()) != null
 
