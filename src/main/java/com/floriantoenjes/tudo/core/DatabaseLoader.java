@@ -102,5 +102,10 @@ public class DatabaseLoader implements ApplicationRunner {
         contactRequest.setSender(user);
         contactRequest.setReceiver(user2);
         contactRequestRepository.save(contactRequest);
+
+        ContactRequest contactRequest2 = new ContactRequest();
+        contactRequest2.setSender(user5);
+        contactRequest2.setReceiver(user);
+        contactRequestRepository.save(contactRequest2);
     }
 }
