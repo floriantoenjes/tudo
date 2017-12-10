@@ -13,6 +13,9 @@ public interface ContactRequestRepository extends CrudRepository<ContactRequest,
     @PreAuthorize("!#entity.receiver.username.equals(authentication.name)")
     <S extends ContactRequest> S save(@Param("entity") S entity);
 
+    @PreAuthorize("authentication.principal.id == #receiverId")
+    Iterable<ContactRequest> findAllByReceiverId(@Param("receiverId") Long receiverId);
+
     @PreAuthorize("authentication.principal.id == #senderId || authentication.principal.id == #receiverId")
     ContactRequest findBySenderIdAndReceiverId(@Param("senderId") Long senderId, @Param("receiverId") Long receiverId);
 
