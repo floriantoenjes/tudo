@@ -1,5 +1,7 @@
 package com.floriantoenjes.tudo.config;
 
+import com.floriantoenjes.tudo.auth.JWTAuthenticationFilter;
+import com.floriantoenjes.tudo.auth.JWTLoginFilter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;

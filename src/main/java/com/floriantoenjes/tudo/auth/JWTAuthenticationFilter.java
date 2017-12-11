@@ -1,4 +1,4 @@
-package com.floriantoenjes.tudo.config;
+package com.floriantoenjes.tudo.auth;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;

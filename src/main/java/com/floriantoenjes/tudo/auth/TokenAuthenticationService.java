@@ -1,4 +1,4 @@
-package com.floriantoenjes.tudo.config;
+package com.floriantoenjes.tudo.auth;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
