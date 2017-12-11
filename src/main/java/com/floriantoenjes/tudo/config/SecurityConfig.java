@@ -12,6 +12,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    public static String API_BASEPATH = "/api/v1";
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -19,12 +20,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .authorizeRequests()
                     .antMatchers(HttpMethod.OPTIONS, "/**")
                     .permitAll()
-                .antMatchers(HttpMethod.POST, "/login")
+                .antMatchers(HttpMethod.POST, API_BASEPATH + "/login")
                 .permitAll()
                     .anyRequest()
                     .authenticated()
                 .and()
-                    .addFilterBefore(new JWTLoginFilter("/login", authenticationManager()),
+                    .addFilterBefore(new JWTLoginFilter(API_BASEPATH + "/login", authenticationManager()),
                             UsernamePasswordAuthenticationFilter.class)
                     .addFilterBefore(new JWTAuthenticationFilter(),
                             UsernamePasswordAuthenticationFilter.class)
