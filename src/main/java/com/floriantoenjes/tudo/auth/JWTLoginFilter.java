@@ -2,6 +2,7 @@ package com.floriantoenjes.tudo.auth;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.floriantoenjes.tudo.user.User;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -44,6 +45,6 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
             HttpServletResponse res, FilterChain chain,
             Authentication auth) throws IOException, ServletException {
         TokenAuthenticationService
-                .addAuthentication(res, auth.getName());
+                .addAuthentication(res, ((User) auth.getPrincipal()).getId().toString());
     }
 }
