@@ -43,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                     .cors()
                 .and()
-                    .httpBasic() // Maybe remove this later if not needed anymore
+                    .httpBasic() //ToDo: Maybe remove this later if not needed anymore
                     .and()
                     .csrf()
                     .disable();
