@@ -29,12 +29,12 @@ public class AddContactValidator implements Validator {
         }
 
         for (User contact : user.getContacts()) {
-            ContactRequest fromUser = contactRequestRepository.findBySenderIdAndReceiverId(user.getId(), contact.getId());
+            ContactRequest fromUser = contactRequestRepository.findBySenderUsernameAndReceiverUsername(user.getUsername(), contact.getUsername());
             if (fromUser != null) {
                 contactRequestRepository.delete(fromUser);
                 return;
             }
-            ContactRequest toUser = contactRequestRepository.findBySenderIdAndReceiverId(contact.getId(), user.getId());
+            ContactRequest toUser = contactRequestRepository.findBySenderUsernameAndReceiverUsername(contact.getUsername(), user.getUsername());
             if (toUser != null) {
                 contactRequestRepository.delete(toUser);
                 return;
