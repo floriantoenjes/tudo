@@ -43,8 +43,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                     .cors()
                 .and()
-                    .httpBasic() //ToDo: Maybe remove this later if not needed anymore
-                    .and()
+//                    .httpBasic() //ToDo: Maybe remove this later if not needed anymore
+//                    .and()
                     .csrf()
                     .disable();
     }
@@ -57,8 +57,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         configuration.addAllowedOrigin("*");
         configuration.addAllowedHeader("*");
-//        configuration.addAllowedMethod("GET");
+        configuration.addAllowedMethod("GET");
+        configuration.addAllowedMethod("PUT");
         configuration.addAllowedMethod("POST");
+        configuration.addAllowedMethod("DELETE");
         configuration.addAllowedMethod("OPTIONS");
 
         configuration.addExposedHeader("Authorization");
