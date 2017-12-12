@@ -10,9 +10,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Data
 @Entity
@@ -49,7 +47,7 @@ public class Todo {
     private User creator;
 
     @ManyToMany
-    private List<User> assignedUsers;
+    private Set<User> assignedUsers;
 
     @OneToOne(mappedBy = "todo", cascade = CascadeType.ALL)
     private TodoForm todoForm;
@@ -82,7 +80,7 @@ public class Todo {
         if (assignedUsers == null) {
             // ToDo: Change from list to set where necessary
 
-            assignedUsers = new ArrayList<>();
+            assignedUsers = new HashSet<>();
         }
         assignee.addAssignedTodo(this);
 

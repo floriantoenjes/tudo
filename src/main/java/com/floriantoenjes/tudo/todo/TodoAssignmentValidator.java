@@ -19,7 +19,7 @@ public class TodoAssignmentValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         Todo todo = (Todo) target;
-        List<User> assignedUsers = todo.getAssignedUsers();
+        Set<User> assignedUsers = todo.getAssignedUsers();
         Set<User> contacts = todo.getCreator().getContacts();
 
         if (assignedUsers != null && assignedUsers.size() > 0) {
