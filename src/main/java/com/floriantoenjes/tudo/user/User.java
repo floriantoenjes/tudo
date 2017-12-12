@@ -14,9 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import javax.validation.Configuration;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Data
 @ToString(exclude = {"todos", "todoLists", "assignedTodos",
@@ -44,25 +42,25 @@ public class User implements UserDetails {
     @ManyToMany(fetch = FetchType.EAGER)
     @NotNull
     @JsonIgnore
-    private List<Role> roles;
+    private Set<Role> roles;
 
     @OneToMany(mappedBy = "creator")
-    private List<TodoList> todoLists;
+    private Set<TodoList> todoLists;
 
     @OneToMany(mappedBy = "creator")
-    private List<Todo> todos;
+    private Set<Todo> todos;
 
     @ManyToMany(mappedBy = "assignedUsers")
-    private List<Todo> assignedTodos;
+    private Set<Todo> assignedTodos;
 
     @ManyToMany
-    private List<User> contacts;
+    private Set<User> contacts;
 
     @OneToMany(mappedBy = "sender")
-    private List<ContactRequest> contactRequestsSent;
+    private Set<ContactRequest> contactRequestsSent;
 
     @OneToMany(mappedBy = "receiver")
-    private List<ContactRequest> contactRequestsReceived;
+    private Set<ContactRequest> contactRequestsReceived;
 
     public User() {
     }
@@ -105,7 +103,7 @@ public class User implements UserDetails {
 
     public boolean addRole(Role role) {
         if (roles == null) {
-            roles = new ArrayList<>();
+            roles = new HashSet<>();
         }
 
         return roles.add(role);
@@ -113,14 +111,14 @@ public class User implements UserDetails {
 
     public boolean addAssignedTodo(Todo todo) {
         if (assignedTodos == null) {
-            assignedTodos = new ArrayList<>();
+            assignedTodos = new HashSet<>();
         }
         return assignedTodos.add(todo);
     }
 
     public boolean addContact(User contact) throws NoContactRequestException {
         if (contacts == null) {
-            contacts = new ArrayList<>();
+            contacts = new HashSet<>();
         }
 
         if (contactRequestsReceived != null
@@ -140,14 +138,14 @@ public class User implements UserDetails {
 
     public boolean addContactRequestSent(ContactRequest contactRequest) {
         if (contactRequestsSent == null) {
-            contactRequestsSent = new ArrayList<>();
+            contactRequestsSent = new HashSet<>();
         }
         return contactRequestsSent.add(contactRequest);
     }
 
     public boolean addContactRequestReceived(ContactRequest contactRequest) {
         if (contactRequestsReceived == null) {
-            contactRequestsReceived = new ArrayList<>();
+            contactRequestsReceived = new HashSet<>();
         }
         return contactRequestsReceived.add(contactRequest);
     }

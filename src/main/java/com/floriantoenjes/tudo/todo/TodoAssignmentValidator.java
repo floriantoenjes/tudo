@@ -6,6 +6,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class TodoAssignmentValidator implements Validator {
@@ -19,7 +20,7 @@ public class TodoAssignmentValidator implements Validator {
     public void validate(Object target, Errors errors) {
         Todo todo = (Todo) target;
         List<User> assignedUsers = todo.getAssignedUsers();
-        List<User> contacts = todo.getCreator().getContacts();
+        Set<User> contacts = todo.getCreator().getContacts();
 
         if (assignedUsers != null && assignedUsers.size() > 0) {
             if (assignedUsers.stream()
