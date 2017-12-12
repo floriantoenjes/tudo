@@ -6,6 +6,7 @@ import com.floriantoenjes.tudo.todo.todoform.TodoForm;
 import com.floriantoenjes.tudo.user.User;
 import com.floriantoenjes.tudo.util.NoContactException;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
@@ -15,6 +16,7 @@ import java.util.*;
 @Data
 @Entity
 @ToString(exclude = "todoForm")
+@EqualsAndHashCode(exclude = "todoForm")
 public class Todo {
 
     @Id
