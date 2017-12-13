@@ -19,7 +19,7 @@ import java.util.Set;
 
 @Data
 @ToString(exclude = {"todos", "todoLists", "assignedTodos",
-        "contactRequestsSent", "contactRequestsReceived", "contacts"})
+        "contactRequestsSent", "contactRequestsReceived", "contacts", "previousContacts"})
 @Entity
 public class User implements UserDetails {
 
@@ -137,6 +137,13 @@ public class User implements UserDetails {
         return contacts.add(contact);
     }
 
+    public boolean removeContact(User contact) {
+        if (contacts == null) {
+            return false;
+        }
+        return contacts.remove(contact);
+    }
+
     public boolean addContactRequestSent(ContactRequest contactRequest) {
         if (contactRequestsSent == null) {
             contactRequestsSent = new HashSet<>();
@@ -149,6 +156,15 @@ public class User implements UserDetails {
             contactRequestsReceived = new HashSet<>();
         }
         return contactRequestsReceived.add(contactRequest);
+    }
+
+    @Transient
+    @JsonIgnore
+    private Set<User> previousContacts;
+
+    @PostLoad
+    private void savePreviousContacts() {
+        previousContacts = new HashSet<>(contacts);
     }
 
     @Override
