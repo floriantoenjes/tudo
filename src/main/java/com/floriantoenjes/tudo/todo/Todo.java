@@ -80,8 +80,6 @@ public class Todo {
             throw new NoContactException("A todo can only be assigned to contacts of the todo creator.");
         }
         if (assignedUsers == null) {
-            // ToDo: Change from list to set where necessary
-
             assignedUsers = new HashSet<>();
         }
         assignee.addAssignedTodo(this);
