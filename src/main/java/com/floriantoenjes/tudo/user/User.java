@@ -102,6 +102,10 @@ public class User implements UserDetails {
         return true;
     }
 
+    @Transient
+    @JsonIgnore
+    private Set<User> previousContacts;
+
     public boolean addRole(Role role) {
         if (roles == null) {
             roles = new HashSet<>();
@@ -157,10 +161,6 @@ public class User implements UserDetails {
         }
         return contactRequestsReceived.add(contactRequest);
     }
-
-    @Transient
-    @JsonIgnore
-    private Set<User> previousContacts;
 
     @PostLoad
     private void savePreviousContacts() {
