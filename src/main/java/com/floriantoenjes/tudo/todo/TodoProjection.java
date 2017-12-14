@@ -19,6 +19,8 @@ public interface TodoProjection {
 
     Date getDueDate();
 
+    Long getPriority();
+
     List<String> getTags();
 
     Location getLocation();

@@ -10,6 +10,8 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.*;
 
@@ -33,6 +35,10 @@ public class Todo {
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date dueDate;
+
+    @Min(0)
+    @Max(10)
+    private Long priority = 0L;
 
     @ElementCollection(targetClass = String.class)
     private List<String> tags;
