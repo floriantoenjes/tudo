@@ -126,6 +126,10 @@ public class User implements UserDetails {
             contacts = new HashSet<>();
         }
 
+        if (contactRequestsReceived == null && contactRequestsSent == null) {
+            throw new NoContactRequestException("No contact request for " + contact.getUsername() + " found.");
+        }
+
         if (contactRequestsReceived != null
                 && contactRequestsReceived.stream()
                 .noneMatch(contactRequest -> contact.equals(contactRequest.getSender())) &&
