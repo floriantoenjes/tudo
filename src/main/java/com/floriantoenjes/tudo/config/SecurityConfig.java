@@ -20,6 +20,7 @@ import java.util.Arrays;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    // ToDo: Extract this constant
     public static String API_BASEPATH = "/api/v1";
 
     @Override
