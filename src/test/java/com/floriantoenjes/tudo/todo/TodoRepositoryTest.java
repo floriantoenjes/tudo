@@ -27,9 +27,6 @@ public class TodoRepositoryTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private TodoRepository todoRepository;
-
-    @Autowired
     WebApplicationContext context;
 
     @Before
