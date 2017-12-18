@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static com.floriantoenjes.tudo.TestUtils.getJwtToken;
 import static org.junit.Assert.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -38,45 +39,52 @@ public class ContactRequestRepositoryTest {
 
     @Test
     public void findOneWithWrongUserShouldReturnUnauthorized() throws Exception {
-        mockMvc.perform(get("/api/v1/contactRequests/1").with(httpBasic("user3", "password")))
+        mockMvc.perform(get("/api/v1/contactRequests/1")
+        .header("Authorization", getJwtToken(mockMvc, "user3", "password")))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test
     public void findOneWithCorrectUserShouldReturnContactRequest() throws Exception {
-        mockMvc.perform(get("/api/v1/contactRequests/1").with(httpBasic("user2", "password")))
+        mockMvc.perform(get("/api/v1/contactRequests/1")
+                .header("Authorization", getJwtToken(mockMvc, "user2", "password")))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     public void deleteWithWrongUserShouldReturnUnauthorized() throws Exception {
-        mockMvc.perform(delete("/api/v1/contactRequests/1").with(httpBasic("user3", "password")))
+        mockMvc.perform(delete("/api/v1/contactRequests/1")
+                .header("Authorization", getJwtToken(mockMvc, "user3", "password")))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void deleteWithCorrectUserShouldReturnOk() throws Exception {
-        mockMvc.perform(delete("/api/v1/contactRequests/1").with(httpBasic("user", "password")))
+        mockMvc.perform(delete("/api/v1/contactRequests/1")
+                .header("Authorization", getJwtToken(mockMvc, "user", "password")))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
     @Test
     public void findAllWithUserRoleShouldReturnUnauthorized() throws Exception {
-        mockMvc.perform(get("/api/v1/contactRequests").with(httpBasic("user", "password")))
+        mockMvc.perform(get("/api/v1/contactRequests")
+                .header("Authorization", getJwtToken(mockMvc, "user", "password")))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test
     public void findAllBySenderIdAndReceiverIdWithWrongUserShouldReturnUnauthorized() throws Exception {
-        mockMvc.perform(get("/api/v1/contactRequests/search/findBySenderIdAndReceiverId?senderId=1&receiverId=2").with(httpBasic("user3", "password")))
+        mockMvc.perform(get("/api/v1/contactRequests/search/findBySenderUsernameAndReceiverUsername?senderName=1&receiverName=2")
+                .header("Authorization", getJwtToken(mockMvc, "user3", "password")))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test
     public void findAllBySenderIdAndReceiverIdWithCorrectUserShouldReturnContactRequests() throws Exception {
         //    ToDo: Investigate why this test fails with 'user' instead of 'user2'
-        mockMvc.perform(get("/api/v1/contactRequests/search/findBySenderIdAndReceiverId?senderId=1&receiverId=2").with(httpBasic("user2", "password")))
+        mockMvc.perform(get("/api/v1/contactRequests/search/findBySenderUsernameAndReceiverUsername?senderName=user&receiverName=user2")
+                .header("Authorization", getJwtToken(mockMvc, "user2", "password")))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 }

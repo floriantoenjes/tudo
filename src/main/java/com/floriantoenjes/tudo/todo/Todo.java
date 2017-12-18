@@ -6,17 +6,19 @@ import com.floriantoenjes.tudo.todo.todoform.TodoForm;
 import com.floriantoenjes.tudo.user.User;
 import com.floriantoenjes.tudo.util.NoContactException;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Data
 @Entity
 @ToString(exclude = "todoForm")
+@EqualsAndHashCode(exclude = "todoForm")
 public class Todo {
 
     @Id
@@ -34,6 +36,10 @@ public class Todo {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dueDate;
 
+    @Min(0)
+    @Max(10)
+    private Long priority = 0L;
+
     @ElementCollection(targetClass = String.class)
     private List<String> tags;
 
@@ -49,7 +55,7 @@ public class Todo {
     private User creator;
 
     @ManyToMany
-    private List<User> assignedUsers;
+    private Set<User> assignedUsers;
 
     @OneToOne(mappedBy = "todo", cascade = CascadeType.ALL)
     private TodoForm todoForm;
@@ -80,9 +86,7 @@ public class Todo {
             throw new NoContactException("A todo can only be assigned to contacts of the todo creator.");
         }
         if (assignedUsers == null) {
-            // ToDo: Change from list to set where necessary
-
-            assignedUsers = new ArrayList<>();
+            assignedUsers = new HashSet<>();
         }
         assignee.addAssignedTodo(this);
 

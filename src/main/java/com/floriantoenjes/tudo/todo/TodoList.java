@@ -8,8 +8,8 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @ToString(exclude = "todos")
@@ -24,7 +24,7 @@ public class TodoList {
     private String name;
 
     @OneToMany(mappedBy = "todoList", cascade = CascadeType.REMOVE)
-    private List<Todo> todos;
+    private Set<Todo> todos;
 
     @ManyToOne
     @JsonIgnore
@@ -42,7 +42,7 @@ public class TodoList {
             throw new UnauthorizedException("Todo list author must be the same as todo author");
         }
         if (todos == null) {
-            todos = new ArrayList<>();
+            todos = new HashSet<>();
         }
 
         todo.setTodoList(this);

@@ -4,6 +4,8 @@ import com.floriantoenjes.tudo.todo.Todo;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.Date;
 
 @Data
@@ -14,6 +16,8 @@ public class TodoForm {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Min(0)
+    @Max(100)
     private Long progress = 0L;
 
     private boolean completed;

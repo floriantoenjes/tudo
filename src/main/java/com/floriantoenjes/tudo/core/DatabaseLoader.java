@@ -69,9 +69,9 @@ public class DatabaseLoader implements ApplicationRunner {
         user5.addRole(roleUser);
         userRepository.save(user5);
 
-        user.addContact(user3);
-        user.addContact(user4);
-        userRepository.save(user);
+//        user.addContact(user3);
+//        user.addContact(user4);
+//        userRepository.save(user);
 
         TodoList todoList1 = new TodoList("TodoList1");
         todoList1.setCreator(user);
@@ -92,7 +92,7 @@ public class DatabaseLoader implements ApplicationRunner {
 
         todoList1.addTodo(todo1);
 
-        todo1.assignToUser(user3);
+//        todo1.assignToUser(user3);
 
         todoRepository.save(todo1);
         todoRepository.save(todo2);

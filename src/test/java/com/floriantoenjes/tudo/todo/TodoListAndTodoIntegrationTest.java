@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.util.NestedServletException;
 
+import static com.floriantoenjes.tudo.TestUtils.getJwtToken;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -51,40 +52,43 @@ public class TodoListAndTodoIntegrationTest {
     @DirtiesContext
     public void shouldAddTodoToTodoList() throws Exception {
         mockMvc.perform(get("http://localhost/api/v1/todoLists/1/todos")
-                .with(httpBasic("user", "password"))
+                .header("Authorization", getJwtToken(mockMvc, "user", "password"))
         .contentType("application/hal+json;charset=UTF-8"))
-                .andDo(MockMvcResultHandlers.print())
                 .andExpect(jsonPath("$._embedded.todos", hasSize(1)));
 
         mockMvc.perform(put("/api/v1/todos/3/todoList")
-                .with(httpBasic("user", "password"))
+                .header("Authorization", getJwtToken(mockMvc, "user", "password"))
                 .contentType("text/uri-list")
         .content("/api/v1/todoLists/1"))
                 .andExpect(status().isNoContent());
 
-        mockMvc.perform(get("http://localhost/api/v1/todoLists/1/todos").with(httpBasic("user", "password"))
-                .contentType("application/hal+json;charset=UTF-8")).andDo(MockMvcResultHandlers.print())
+        mockMvc.perform(get("http://localhost/api/v1/todoLists/1/todos")
+                .header("Authorization", getJwtToken(mockMvc, "user", "password"))
+                .contentType("application/hal+json;charset=UTF-8"))
                 .andExpect(jsonPath("$._embedded.todos", hasSize(2)));
     }
 
     @Test
     @DirtiesContext
-    public void shouldRemoveTodoFromList() throws Exception {
-        mockMvc.perform(get("/api/v1/todos/1/todoList").with(httpBasic("user", "password")))
+    public void shouldRemoveTodoFromTodoList() throws Exception {
+        mockMvc.perform(get("/api/v1/todos/1/todoList")
+                .header("Authorization", getJwtToken(mockMvc, "user", "password")))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/hal+json;charset=UTF-8"));
 
-        mockMvc.perform(delete("/api/v1/todos/1/todoList").with(httpBasic("user", "password")))
+        mockMvc.perform(delete("/api/v1/todos/1/todoList")
+                .header("Authorization", getJwtToken(mockMvc, "user", "password")))
         .andExpect(status().isNoContent());
 
-        mockMvc.perform(get("/api/v1/todos/1/todoList").with(httpBasic("user", "password")))
+        mockMvc.perform(get("/api/v1/todos/1/todoList")
+                .header("Authorization", getJwtToken(mockMvc, "user", "password")))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     public void shouldNotAssignCreatorToTodo() throws Exception {
         mockMvc.perform(put("/api/v1/todos/1/assignedUsers")
-                .with(httpBasic("user", "password"))
+                .header("Authorization", getJwtToken(mockMvc, "user", "password"))
                 .contentType("text/uri-list")
                 .content("/api/v1/users/1"))
                 .andExpect(status().isBadRequest());
@@ -93,7 +97,7 @@ public class TodoListAndTodoIntegrationTest {
     @Test
     public void shouldAssignUserToTodo() throws Exception {
         mockMvc.perform(put("/api/v1/todos/1/assignedUsers")
-                .with(httpBasic("user", "password"))
+                .header("Authorization", getJwtToken(mockMvc, "user", "password"))
                 .contentType("text/uri-list")
                 .content("/api/v1/users/3"))
                 .andExpect(status().isNoContent());

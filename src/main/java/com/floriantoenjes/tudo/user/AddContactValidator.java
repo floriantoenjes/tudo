@@ -2,6 +2,7 @@ package com.floriantoenjes.tudo.user;
 
 import com.floriantoenjes.tudo.contactrequest.ContactRequest;
 import com.floriantoenjes.tudo.contactrequest.ContactRequestRepository;
+import com.floriantoenjes.tudo.util.NoContactRequestException;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -11,8 +12,11 @@ public class AddContactValidator implements Validator {
 
     private ContactRequestRepository contactRequestRepository;
 
-    public AddContactValidator(ContactRequestRepository contactRequestRepository) {
+    private UserRepository userRepository;
+
+    public AddContactValidator(ContactRequestRepository contactRequestRepository, UserRepository userRepository) {
         this.contactRequestRepository = contactRequestRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -29,17 +33,28 @@ public class AddContactValidator implements Validator {
         }
 
         for (User contact : user.getContacts()) {
-            ContactRequest fromUser = contactRequestRepository.findBySenderIdAndReceiverId(user.getId(), contact.getId());
+            ContactRequest fromUser = contactRequestRepository.findBySenderUsernameAndReceiverUsername(user.getUsername(), contact.getUsername());
             if (fromUser != null) {
+                addContactAndSave(user, contact);
                 contactRequestRepository.delete(fromUser);
                 return;
             }
-            ContactRequest toUser = contactRequestRepository.findBySenderIdAndReceiverId(contact.getId(), user.getId());
+            ContactRequest toUser = contactRequestRepository.findBySenderUsernameAndReceiverUsername(contact.getUsername(), user.getUsername());
             if (toUser != null) {
+                addContactAndSave(contact, user);
                 contactRequestRepository.delete(toUser);
                 return;
             }
         }
         errors.reject("noContactRequest", "Contact request has to be present to add a contact.");
+    }
+
+    private void addContactAndSave(User user, User contact) {
+        try {
+            user.addContact(contact);
+            userRepository.save(user);
+        } catch (NoContactRequestException e) {
+            e.printStackTrace();
+        }
     }
 }

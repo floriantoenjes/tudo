@@ -26,11 +26,11 @@ public class ContactRequestSentValidator implements Validator {
             return;
         }
 
-        if (contactRequestRepository.findBySenderIdAndReceiverId(contactRequest.getSender().getId(),
-                        contactRequest.getReceiver().getId()) != null
+        if (contactRequestRepository.findBySenderUsernameAndReceiverUsername(contactRequest.getSender().getUsername(),
+                        contactRequest.getReceiver().getUsername()) != null
 
-                || contactRequestRepository.findBySenderIdAndReceiverId(contactRequest.getReceiver().getId(),
-                contactRequest.getSender().getId())  != null) {
+                || contactRequestRepository.findBySenderUsernameAndReceiverUsername(contactRequest.getReceiver().getUsername(),
+                contactRequest.getSender().getUsername())  != null) {
 
             errors.reject("exists", "Contact request has already been sent.");
         }

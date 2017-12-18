@@ -13,11 +13,12 @@ public interface ContactRequestRepository extends CrudRepository<ContactRequest,
     @PreAuthorize("!#entity.receiver.username.equals(authentication.name)")
     <S extends ContactRequest> S save(@Param("entity") S entity);
 
-    @PreAuthorize("authentication.principal.id == #receiverId")
-    Iterable<ContactRequest> findAllByReceiverId(@Param("receiverId") Long receiverId);
+    @PreAuthorize("authentication.name.equals(#receiverName)")
+    Iterable<ContactRequest> findAllByReceiverUsername(@Param("receiverName") String receiverName);
 
-    @PreAuthorize("authentication.principal.id == #senderId || authentication.principal.id == #receiverId")
-    ContactRequest findBySenderIdAndReceiverId(@Param("senderId") Long senderId, @Param("receiverId") Long receiverId);
+    @PreAuthorize("authentication.name.equals(#senderName) || authentication.name.equals(#receiverName)")
+    ContactRequest findBySenderUsernameAndReceiverUsername(@Param("senderName") String senderName,
+                                                           @Param("receiverName") String receiverName);
 
     @Override
     @PostAuthorize("returnObject != null && (returnObject.sender.username == authentication.name " +

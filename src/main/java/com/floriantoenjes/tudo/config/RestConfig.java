@@ -1,4 +1,4 @@
-package com.floriantoenjes.tudo.core;
+package com.floriantoenjes.tudo.config;
 
 import com.floriantoenjes.tudo.contactrequest.ContactRequestSentValidator;
 import com.floriantoenjes.tudo.todo.TodoAssignmentValidator;
