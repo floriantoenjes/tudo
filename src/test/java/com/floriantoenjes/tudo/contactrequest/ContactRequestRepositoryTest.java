@@ -75,7 +75,7 @@ public class ContactRequestRepositoryTest {
 
     @Test
     public void findAllBySenderIdAndReceiverIdWithWrongUserShouldReturnUnauthorized() throws Exception {
-        mockMvc.perform(get("/api/v1/contactRequests/search/findBySenderIdAndReceiverId?senderId=1&receiverId=2")
+        mockMvc.perform(get("/api/v1/contactRequests/search/findBySenderUsernameAndReceiverUsername?senderName=1&receiverName=2")
                 .header("Authorization", getJwtToken(mockMvc, "user3", "password")))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
@@ -83,7 +83,7 @@ public class ContactRequestRepositoryTest {
     @Test
     public void findAllBySenderIdAndReceiverIdWithCorrectUserShouldReturnContactRequests() throws Exception {
         //    ToDo: Investigate why this test fails with 'user' instead of 'user2'
-        mockMvc.perform(get("/api/v1/contactRequests/search/findBySenderIdAndReceiverId?senderId=1&receiverId=2")
+        mockMvc.perform(get("/api/v1/contactRequests/search/findBySenderUsernameAndReceiverUsername?senderName=user&receiverName=user2")
                 .header("Authorization", getJwtToken(mockMvc, "user2", "password")))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
