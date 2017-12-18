@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static com.floriantoenjes.tudo.TestUtils.getJwtToken;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -41,14 +42,16 @@ public class TodoListRepositoryTest {
 
     @Test
     public void findOneWithWrongUserShouldReturnUnauthorized() throws Exception {
-        mockMvc.perform(get("/api/v1/todoLists/1").with(httpBasic("user2", "password")))
+        mockMvc.perform(get("/api/v1/todoLists/1").
+        header("Authorization", getJwtToken(mockMvc, "user2", "password")))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     public void findOneWithCorrectUserShouldReturnTodo() throws Exception {
-        mockMvc.perform(get("/api/v1/todoLists/1").with(httpBasic("user", "password")))
+        mockMvc.perform(get("/api/v1/todoLists/1").
+        header("Authorization", getJwtToken(mockMvc,"user", "password")))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("application/hal+json;charset=UTF-8"));
     }
