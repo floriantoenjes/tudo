@@ -37,8 +37,6 @@ public class TodoRepositoryTest {
                 .build();
     }
 
-//  ToDo: Write tests for PUT method
-
     @Test
     public void findOneWithWrongUserShouldReturnUnauthorized() throws Exception {
         mockMvc.perform(get("/api/v1/todos/1")
