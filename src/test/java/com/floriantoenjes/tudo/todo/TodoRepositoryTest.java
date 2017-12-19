@@ -39,21 +39,17 @@ public class TodoRepositoryTest {
 
 //  ToDo: Write tests for PUT method
 
-
-
     @Test
     public void findOneWithWrongUserShouldReturnUnauthorized() throws Exception {
-        String user2jwt = getJwtToken(mockMvc,"user2", "password");
-
-        mockMvc.perform(get("/api/v1/todos/1").header("Authorization", user2jwt))
+        mockMvc.perform(get("/api/v1/todos/1")
+                .header("Authorization", getJwtToken(mockMvc,"user2", "password")))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test
     public void findOneWithCorrectUserShouldReturnTodo() throws Exception {
-        String userJwt = getJwtToken(mockMvc,"user", "password");
-
-        mockMvc.perform(get("/api/v1/todos/1").header("Authorization", userJwt))
+        mockMvc.perform(get("/api/v1/todos/1")
+                .header("Authorization", getJwtToken(mockMvc,"user", "password")))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("application/hal+json;charset=UTF-8"));
     }
@@ -61,27 +57,24 @@ public class TodoRepositoryTest {
 
     @Test
     public void deleteWithWrongUserShouldReturnUnauthorized() throws Exception {
-        String user2jwt = getJwtToken(mockMvc,"user2", "password");
-
-        mockMvc.perform(delete("/api/v1/todos/1").header("Authorization", user2jwt))
+        mockMvc.perform(delete("/api/v1/todos/1")
+                .header("Authorization", getJwtToken(mockMvc,"user2", "password")))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void deleteWithCorrectUserShouldReturnOk() throws Exception {
-        String userJwt = getJwtToken(mockMvc,"user", "password");
-
-        mockMvc.perform(delete("/api/v1/todos/1").header("Authorization", userJwt))
+        mockMvc.perform(delete("/api/v1/todos/1")
+                .header("Authorization", getJwtToken(mockMvc,"user", "password")))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
 
     @Test
     public void findAllWithUserRoleShouldReturnUnauthorized() throws Exception {
-        String userJwt = getJwtToken(mockMvc,"user", "password");
-
-        mockMvc.perform(get("/api/v1/todos").header("Authorization", userJwt))
+        mockMvc.perform(get("/api/v1/todos")
+                .header("Authorization", getJwtToken(mockMvc,"user", "password")))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
@@ -94,19 +87,15 @@ public class TodoRepositoryTest {
 
     @Test
     public void findAllByCreatorWithWrongUserShouldReturnUnauthorized() throws Exception {
-        String user2jwt = getJwtToken(mockMvc,"user2", "password");
-
         mockMvc.perform(get("/api/v1/todos/search/findAllByCreator?creator=/api/v1/users/1")
-                .header("Authorization", user2jwt))
+                .header("Authorization", getJwtToken(mockMvc,"user2", "password")))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test
     public void findAllByCreatorWithCorrectUserShouldReturnTodos() throws Exception {
-        String userJwt = getJwtToken(mockMvc,"user", "password");
-
         mockMvc.perform(get("/api/v1/todos/search/findAllByCreator?creator=/api/v1/users/1")
-                .header("Authorization", userJwt))
+                .header("Authorization", getJwtToken(mockMvc,"user", "password")))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("application/hal+json;charset=UTF-8"));
     }
@@ -114,29 +103,23 @@ public class TodoRepositoryTest {
 
     @Test
     public void findAllByCreatorAndTagsWithWrongUserAndExistingTagShouldReturnUnauthorized() throws Exception {
-        String user2jwt = getJwtToken(mockMvc,"user2", "password");
-
         mockMvc.perform(get("/api/v1/todos/search/findAllByCreatorAndTags?creator=/api/v1/users/1&tag=tag")
-                .header("Authorization", user2jwt))
+                .header("Authorization", getJwtToken(mockMvc,"user2", "password")))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test
     public void findAllByCreatorAndTagsWithCorrectUserAndNotExistingTagShouldReturnEmpty() throws Exception {
-        String userJwt = getJwtToken(mockMvc,"user", "password");
-
         mockMvc.perform(get("/api/v1/todos/search/findAllByCreatorAndTags?creator=/api/v1/users/1&tag=invalid")
-                .header("Authorization", userJwt))
+                .header("Authorization", getJwtToken(mockMvc,"user", "password")))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$._embedded.todos", hasSize(0)));
     }
 
     @Test
     public void findAllByCreatorAndTagsWithCorrectUserAndExistingTagShouldReturnTodos() throws Exception {
-        String userJwt = getJwtToken(mockMvc,"user", "password");
-
         mockMvc.perform(get("/api/v1/todos/search/findAllByCreatorAndTags?creator=/api/v1/users/1&tag=tag")
-                .header("Authorization", userJwt))
+                .header("Authorization", getJwtToken(mockMvc,"user", "password")))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("application/hal+json;charset=UTF-8"));
     }
