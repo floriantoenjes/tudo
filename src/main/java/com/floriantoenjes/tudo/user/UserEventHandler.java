@@ -3,6 +3,7 @@ package com.floriantoenjes.tudo.user;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeLinkDelete;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
@@ -11,11 +12,14 @@ import java.util.Set;
 @RepositoryEventHandler(User.class)
 public class UserEventHandler {
 
+    private PasswordEncoder passwordEncoder;
+
     private RoleRepository roleRepository;
 
     private UserRepository userRepository;
 
-    public UserEventHandler(RoleRepository roleRepository, UserRepository userRepository) {
+    public UserEventHandler(PasswordEncoder passwordEncoder, RoleRepository roleRepository, UserRepository userRepository) {
+        this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
     }
@@ -23,6 +27,7 @@ public class UserEventHandler {
     @HandleBeforeCreate
     public void addCreatorBasedOnLoggedInUser(User user) {
         user.addRole(roleRepository.findByName("ROLE_USER"));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
     }
 
     @HandleBeforeLinkDelete
