@@ -4,6 +4,7 @@ import com.floriantoenjes.tudo.auth.JWTAuthenticationFilter;
 import com.floriantoenjes.tudo.auth.JWTLoginFilter;
 import com.floriantoenjes.tudo.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -19,14 +20,13 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
-
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    // ToDo: Extract this constant
-    public static String API_BASEPATH = "/api/v1";
+
+    @Value("${spring.data.rest.basePath}")
+    public String apiBasePath;
 
     private UserService userService;
 
@@ -51,16 +51,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .authorizeRequests()
                     .antMatchers(HttpMethod.OPTIONS, "/**")
                     .permitAll()
-                    .antMatchers(HttpMethod.POST, API_BASEPATH + "/login")
+                    .antMatchers(HttpMethod.POST, apiBasePath + "/login")
                     .permitAll()
-                    .antMatchers(HttpMethod.POST, API_BASEPATH + "/users")
+                    .antMatchers(HttpMethod.POST, apiBasePath + "/users")
                     .permitAll()
                     .antMatchers("/h2-console/*")
                     .permitAll()
                     .anyRequest()
                     .authenticated()
                 .and()
-                    .addFilterBefore(new JWTLoginFilter(API_BASEPATH + "/login", authenticationManager()),
+                    .addFilterBefore(new JWTLoginFilter(apiBasePath + "/login", authenticationManager()),
                             UsernamePasswordAuthenticationFilter.class)
                     .addFilterBefore(new JWTAuthenticationFilter(),
                             UsernamePasswordAuthenticationFilter.class)
