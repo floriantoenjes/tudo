@@ -81,7 +81,7 @@ public class TodoListRepositoryTest {
 
     @Test
     public void findAllByCreatorWithoutUserShouldReturnUnauthorized() throws Exception {
-        mockMvc.perform(get("/api/v1/todoLists/search/findAllByCreator?creator=/api/v1/users/2"))
+        mockMvc.perform(get("/api/v1/todoLists/search/findAllByCreator?creator=/api/v1/users/3"))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
@@ -96,7 +96,7 @@ public class TodoListRepositoryTest {
 
     @Test
     public void findAllByCreatorWithCorrectUserShouldReturnTodos() throws Exception {
-        mockMvc.perform(get("/api/v1/todoLists/search/findAllByCreator?creator=/api/v1/users/1")
+        mockMvc.perform(get("/api/v1/todoLists/search/findAllByCreator?creator=/api/v1/users/2")
                 .header("Authorization", getJwtToken(mockMvc,"user", "password")))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("application/hal+json;charset=UTF-8"));

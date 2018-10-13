@@ -79,7 +79,7 @@ public class TodoRepositoryTest {
 
     @Test
     public void findAllByCreatorWithoutUserShouldReturnUnauthorized() throws Exception {
-        mockMvc.perform(get("/api/v1/todos/search/findAllByCreator?creator=/api/v1/users/2"))
+        mockMvc.perform(get("/api/v1/todos/search/findAllByCreator?creator=/api/v1/users/3"))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
@@ -92,7 +92,7 @@ public class TodoRepositoryTest {
 
     @Test
     public void findAllByCreatorWithCorrectUserShouldReturnTodos() throws Exception {
-        mockMvc.perform(get("/api/v1/todos/search/findAllByCreator?creator=/api/v1/users/1")
+        mockMvc.perform(get("/api/v1/todos/search/findAllByCreator?creator=/api/v1/users/2")
                 .header("Authorization", getJwtToken(mockMvc,"user", "password")))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("application/hal+json;charset=UTF-8"));
@@ -108,7 +108,7 @@ public class TodoRepositoryTest {
 
     @Test
     public void findAllByCreatorAndTagsWithCorrectUserAndNotExistingTagShouldReturnEmpty() throws Exception {
-        mockMvc.perform(get("/api/v1/todos/search/findAllByCreatorAndTags?creator=/api/v1/users/1&tag=invalid")
+        mockMvc.perform(get("/api/v1/todos/search/findAllByCreatorAndTags?creator=/api/v1/users/2&tag=invalid")
                 .header("Authorization", getJwtToken(mockMvc,"user", "password")))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$._embedded.todos", hasSize(0)));
@@ -116,7 +116,7 @@ public class TodoRepositoryTest {
 
     @Test
     public void findAllByCreatorAndTagsWithCorrectUserAndExistingTagShouldReturnTodos() throws Exception {
-        mockMvc.perform(get("/api/v1/todos/search/findAllByCreatorAndTags?creator=/api/v1/users/1&tag=tag")
+        mockMvc.perform(get("/api/v1/todos/search/findAllByCreatorAndTags?creator=/api/v1/users/2&tag=tag")
                 .header("Authorization", getJwtToken(mockMvc,"user", "password")))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("application/hal+json;charset=UTF-8"));

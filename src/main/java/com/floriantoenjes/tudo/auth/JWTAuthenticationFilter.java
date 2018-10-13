@@ -4,6 +4,7 @@ import com.floriantoenjes.tudo.user.UserService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
@@ -14,6 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 public class JWTAuthenticationFilter extends GenericFilterBean {
+
+    private UserDetails userDetails;
 
     private UserService userService;
 
@@ -29,12 +32,16 @@ public class JWTAuthenticationFilter extends GenericFilterBean {
         String username = TokenAuthenticationService
                 .getAuthentication((HttpServletRequest)request);
 
-        UserDetails userDetails = userService.loadUserByUsername(username);
+        try {
+            userDetails = userService.loadUserByUsername(username);
 
-        SecurityContextHolder.getContext()
-                .setAuthentication(new UsernamePasswordAuthenticationToken(
-                        username, null, userDetails.getAuthorities()
-                ));
+            SecurityContextHolder.getContext()
+                    .setAuthentication(new UsernamePasswordAuthenticationToken(
+                            username, null, userDetails.getAuthorities()
+                    ));
+
+        } catch (UsernameNotFoundException ignored) {}
+
         filterChain.doFilter(request,response);
     }
 }

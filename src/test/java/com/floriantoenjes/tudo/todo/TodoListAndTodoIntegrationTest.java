@@ -82,7 +82,7 @@ public class TodoListAndTodoIntegrationTest {
         mockMvc.perform(put("/api/v1/todos/1/assignedUsers")
                 .header("Authorization", getJwtToken(mockMvc, "user", "password"))
                 .contentType("text/uri-list")
-                .content("/api/v1/users/1"))
+                .content("/api/v1/users/2"))
                 .andExpect(status().isBadRequest());
     }
 
