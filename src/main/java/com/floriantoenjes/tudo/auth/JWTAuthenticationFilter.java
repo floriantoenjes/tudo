@@ -1,10 +1,7 @@
 package com.floriantoenjes.tudo.auth;
 
-import com.floriantoenjes.tudo.user.UserService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
@@ -16,31 +13,15 @@ import java.io.IOException;
 
 public class JWTAuthenticationFilter extends GenericFilterBean {
 
-    private UserDetails userDetails;
-
-    private UserService userService;
-
-    public JWTAuthenticationFilter(UserService userService) {
-        this.userService = userService;
-    }
-
     @Override
     public void doFilter(ServletRequest request,
                          ServletResponse response,
                          FilterChain filterChain)
             throws IOException, ServletException {
-        String username = TokenAuthenticationService
+        UsernamePasswordAuthenticationToken authenticationToken = TokenAuthenticationService
                 .getAuthentication((HttpServletRequest)request);
 
-        try {
-            userDetails = userService.loadUserByUsername(username);
-
-            SecurityContextHolder.getContext()
-                    .setAuthentication(new UsernamePasswordAuthenticationToken(
-                            username, null, userDetails.getAuthorities()
-                    ));
-
-        } catch (UsernameNotFoundException ignored) {}
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
         filterChain.doFilter(request,response);
     }
