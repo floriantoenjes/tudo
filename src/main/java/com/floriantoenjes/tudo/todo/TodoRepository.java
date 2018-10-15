@@ -17,12 +17,6 @@ public interface TodoRepository extends CrudRepository<Todo, Long> {
     <S extends Todo> Iterable<S> save(Iterable<S> entities);
 
     @Override
-    Iterable<Todo> findAll();
-
-    @Override
-    Iterable<Todo> findAll(Iterable<Long> longs);
-
-    @Override
     @PreAuthorize("permitAll()")
     @PostAuthorize("returnObject != null && returnObject.creator.username == authentication.name " +
             "|| returnObject.isAssignedToUser(authentication.name)")
@@ -31,15 +25,6 @@ public interface TodoRepository extends CrudRepository<Todo, Long> {
     @Override
     @PreAuthorize("(#entity != null && #entity.creator.username == authentication.name) || hasRole('ROLE_ADMIN')")
     void delete(@Param("entity") Todo entity);
-
-    @Override
-    void delete(Long aLong);
-
-    @Override
-    void delete(Iterable<? extends Todo> entities);
-
-    @Override
-    void deleteAll();
 
     @PreAuthorize("(#creator != null && #creator.username == authentication.name) || hasRole('ROLE_ADMIN')")
     Iterable<Todo> findAllByCreator(@Param("creator") User creator);

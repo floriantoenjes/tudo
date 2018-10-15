@@ -53,15 +53,17 @@ public class DatabaseLoader implements ApplicationRunner {
                 new UsernamePasswordAuthenticationToken("load_user", "load_user",
                         AuthorityUtils.createAuthorityList("ROLE_USER", "ROLE_ADMIN")));
 
+        Role roleUser = new Role("ROLE_USER");
+        roleRepository.save(roleUser);
+
         Role roleAdmin = new Role("ROLE_ADMIN");
         roleRepository.save(roleAdmin);
 
+
         User admin = new User("admin", "admin@email.com", passwordEncoder.encode("password"));
+        admin.addRole(roleUser);
         admin.addRole(roleAdmin);
         userRepository.save(admin);
-
-        Role roleUser = new Role("ROLE_USER");
-        roleRepository.save(roleUser);
 
         User user = new User("user", "email@email.com", passwordEncoder.encode("password"));
         user.addRole(roleUser);

@@ -29,25 +29,9 @@ public interface ContactRequestRepository extends CrudRepository<ContactRequest,
     ContactRequest findOne(@Param("contactRequestId") Long aLong);
 
     @Override
-    Iterable<ContactRequest> findAll();
-
-    @Override
-    Iterable<ContactRequest> findAll(Iterable<Long> longs);
-
-    @Override
-    void delete(Long aLong);
-
-    @Override
     @PreAuthorize("#entity.sender.username == authentication.name || #entity.receiver.username == authentication.name " +
             "|| hasRole('ROLE_ADMIN')")
     void delete(@Param("entity") ContactRequest entity);
-
-    @Override
-    void delete(Iterable<? extends ContactRequest> entities);
-
-    @Override
-    void deleteAll();
-
 
 
 }

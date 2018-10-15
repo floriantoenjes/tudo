@@ -15,25 +15,13 @@ public interface TodoListRepository extends CrudRepository<TodoList, Long> {
     TodoList findOne(Long aLong);
 
     @Override
-    Iterable<TodoList> findAll();
-
-    @Override
-    Iterable<TodoList> findAll(Iterable<Long> longs);
-
-    @Override
-    void delete(Long aLong);
-
-    @Override
     @PreAuthorize("(#entity != null && #entity.creator.username == authentication.name) || hasRole('ROLE_ADMIN')")
     void delete(@Param("entity") TodoList entity);
-
-    @Override
-    void delete(Iterable<? extends TodoList> entities);
-
-    @Override
-    void deleteAll();
 
     @PreAuthorize("(#creator != null && #creator.username == authentication.name) || hasRole('ROLE_ADMIN')")
     Iterable<TodoList> findAllByCreator(@Param("creator") User creator);
 
+    @Override
+    @PreAuthorize("hasRole('ROLE_USER')")
+    <S extends TodoList> S save(S entity);
 }
