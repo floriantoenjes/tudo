@@ -33,7 +33,7 @@ public class TodoResource {
     public ResponseEntity<Todo> saveTodoForm(@Valid @RequestBody TodoForm todoForm, @PathVariable Long todoId) {
         Todo todo = this.todoRepository.findOne(todoId);
         if (todo != null) {
-            if (todo.getCreator().getId().equals(userUtils.getUser().getId())) {
+            if (isUserAuthorized(todo)) {
                 todo.setProgress(todoForm.getProgress());
                 todo.setCompleted(todoForm.isCompleted());
                 todo.setCompletedAt(todoForm.getCompletedAt());
@@ -46,5 +46,13 @@ public class TodoResource {
             }
         }
         return ResponseEntity.notFound().build();
+    }
+
+    private boolean isUserAuthorized(Todo todo) {
+        String username = userUtils.getUser().getUsername();
+
+        return todo.getCreator().getUsername().equals(username)
+                || todo.isAssignedToUser(username)
+                || userUtils.getUser().getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
     }
 }
