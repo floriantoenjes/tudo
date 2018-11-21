@@ -1,6 +1,7 @@
 package com.floriantoenjes.tudo.todo;
 
 import com.floriantoenjes.tudo.todo.todoform.TodoForm;
+import com.floriantoenjes.tudo.user.User;
 import com.floriantoenjes.tudo.user.UserUtils;
 import org.springframework.data.rest.webmvc.BasePathAwareController;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
@@ -49,10 +50,11 @@ public class TodoResource {
     }
 
     private boolean isUserAuthorized(Todo todo) {
-        String username = userUtils.getUser().getUsername();
+        User user = userUtils.getUser();
 
-        return todo.getCreator().getUsername().equals(username)
-                || todo.isAssignedToUser(username)
+        return todo.getCreator().equals(user)
+                || todo.isAssignedToUser(user.getUsername())
                 || userUtils.getUser().getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
     }
+
 }
