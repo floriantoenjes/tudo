@@ -6,15 +6,11 @@ import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Data
-@Entity
 public class TodoForm {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
 
     @Min(0)
     @Max(100)
@@ -22,17 +18,8 @@ public class TodoForm {
 
     private boolean completed;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private Date completedAt;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private Date lastUpdated;
 
-    @OneToOne
-    private Todo todo;
-
-    @PreUpdate
-    protected void onUpdate() {
-        lastUpdated = new Date();
-    }
 }

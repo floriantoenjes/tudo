@@ -25,8 +25,6 @@ public interface TodoProjection {
 
     Location getLocation();
 
-    TodoForm getTodoForm();
-
     List<User> getAssignedUsers();
 
 }

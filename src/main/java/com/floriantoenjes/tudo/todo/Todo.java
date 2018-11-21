@@ -2,12 +2,9 @@ package com.floriantoenjes.tudo.todo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.floriantoenjes.tudo.todo.location.Location;
-import com.floriantoenjes.tudo.todo.todoform.TodoForm;
 import com.floriantoenjes.tudo.user.User;
 import com.floriantoenjes.tudo.util.NoContactException;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
@@ -17,8 +14,6 @@ import java.util.*;
 
 @Data
 @Entity
-@ToString(exclude = "todoForm")
-@EqualsAndHashCode(exclude = "todoForm")
 public class Todo {
 
     @Id
@@ -40,13 +35,14 @@ public class Todo {
     @Max(10)
     private Long priority = 0L;
 
-    @ElementCollection(targetClass = String.class)
+    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
     private List<String> tags;
 
     @OneToOne(cascade = CascadeType.ALL)
     private Location location;
 
     @ManyToOne
+    @JsonIgnore
     private TodoList todoList;
 
     @ManyToOne
@@ -55,10 +51,20 @@ public class Todo {
     private User creator;
 
     @ManyToMany
+    @JsonIgnore
     private Set<User> assignedUsers;
 
-    @OneToOne(mappedBy = "todo", cascade = CascadeType.ALL)
-    private TodoForm todoForm;
+    @Min(0)
+    @Max(100)
+    private Long progress = 0L;
+
+    private boolean completed;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date completedAt;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastUpdated;
 
     public Todo() {
     }
@@ -70,8 +76,11 @@ public class Todo {
     @PrePersist
     protected void onCreate() {
         createdAt = new Date();
-        todoForm = new TodoForm();
-        todoForm.setTodo(this);
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        lastUpdated = new Date();
     }
 
     public boolean addTag(String tag) {
