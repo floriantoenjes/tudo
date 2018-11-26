@@ -8,6 +8,7 @@ import com.floriantoenjes.tudo.todo.TodoList;
 import com.floriantoenjes.tudo.util.NoContactRequestException;
 import lombok.Data;
 import lombok.ToString;
+import org.springframework.hateoas.Identifiable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -21,7 +22,7 @@ import java.util.Set;
 @ToString(exclude = {"todos", "todoLists", "assignedTodos",
         "contactRequestsSent", "contactRequestsReceived", "contacts", "previousContacts"})
 @Entity
-public class User implements UserDetails {
+public class User implements Identifiable<Long>, UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

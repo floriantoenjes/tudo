@@ -17,19 +17,18 @@ import javax.validation.Valid;
 
 @RepositoryRestController
 @BasePathAwareController
-public class TodoResource {
+public class TodoController {
 
     private TodoRepository todoRepository;
 
     private UserUtils userUtils;
 
-    public TodoResource(TodoRepository todoRepository, UserUtils userUtils) {
+    public TodoController(TodoRepository todoRepository, UserUtils userUtils) {
         this.todoRepository = todoRepository;
         this.userUtils = userUtils;
     }
 
     @PatchMapping("/todo-form/{todoId}")
-    @ResponseBody
     @Transactional
     public ResponseEntity<Todo> saveTodoForm(@Valid @RequestBody TodoForm todoForm, @PathVariable Long todoId) {
         Todo todo = this.todoRepository.findOne(todoId);
