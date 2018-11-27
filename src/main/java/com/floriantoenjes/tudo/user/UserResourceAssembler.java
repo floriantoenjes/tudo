@@ -16,7 +16,8 @@ public class UserResourceAssembler extends ResourceAssemblerSupport<User, UserRe
         UserResource userResource = new UserResource();
         userResource.setUsername(entity.getUsername());
 
-        userResource.add(ControllerLinkBuilder.linkTo(UserController.class).slash(entity).withSelfRel());
+        userResource.add(ControllerLinkBuilder.linkTo(UserController.class)
+                .slash("api/v1/users").slash(entity).withSelfRel());
 
         return userResource;
     }
