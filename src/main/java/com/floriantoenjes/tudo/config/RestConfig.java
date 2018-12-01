@@ -8,7 +8,9 @@ import com.floriantoenjes.tudo.user.User;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.core.event.ValidatingRepositoryEventListener;
+import org.springframework.data.rest.core.mapping.ExposureConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurerAdapter;
+import org.springframework.http.HttpMethod;
 import org.springframework.validation.Validator;
 
 import javax.annotation.Resource;
@@ -55,5 +57,9 @@ public class RestConfig extends RepositoryRestConfigurerAdapter {
 
         config.exposeIdsFor(TodoForm.class);
         config.exposeIdsFor(User.class);
+
+        ExposureConfiguration exposureConfiguration = config.getExposureConfiguration();
+        exposureConfiguration.forDomainType(User.class)
+                .withAssociationExposure((metdata, httpMethods) -> httpMethods.disable(HttpMethod.GET));
     }
 }
