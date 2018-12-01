@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.Optional;
@@ -33,4 +34,8 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
     @Override
     @PreAuthorize("permitAll()")
     Optional<User> findById(Long aLong);
+
+    @Override
+    @PreAuthorize("#entity != null && #entity.username == authentication.name || hasRole('ROLE_ADMIN')")
+    <S extends User> S save(@Param("entity") S entity);
 }

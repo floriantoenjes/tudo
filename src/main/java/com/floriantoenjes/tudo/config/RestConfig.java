@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.core.event.ValidatingRepositoryEventListener;
 import org.springframework.data.rest.core.mapping.ExposureConfiguration;
-import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurerAdapter;
+import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
 import org.springframework.http.HttpMethod;
 import org.springframework.validation.Validator;
 
@@ -17,7 +17,7 @@ import javax.annotation.Resource;
 
 
 @Configuration
-public class RestConfig extends RepositoryRestConfigurerAdapter {
+public class RestConfig implements RepositoryRestConfigurer {
 
     @Resource(name = "defaultValidator")
     private Validator validator;
