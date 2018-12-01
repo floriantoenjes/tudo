@@ -12,6 +12,7 @@ import com.floriantoenjes.tudo.user.User;
 import com.floriantoenjes.tudo.user.UserRepository;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -50,7 +51,7 @@ public class DatabaseLoader implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken("load_user", "load_user",
+                new AnonymousAuthenticationToken("load_user", "load_user",
                         AuthorityUtils.createAuthorityList("ROLE_USER", "ROLE_ADMIN")));
 
         Role roleUser = new Role("ROLE_USER");

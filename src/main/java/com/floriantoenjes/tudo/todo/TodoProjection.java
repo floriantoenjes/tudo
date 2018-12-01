@@ -1,7 +1,6 @@
 package com.floriantoenjes.tudo.todo;
 
 import com.floriantoenjes.tudo.todo.location.Location;
-import com.floriantoenjes.tudo.todo.todoform.TodoForm;
 import com.floriantoenjes.tudo.user.User;
 import org.springframework.data.rest.core.config.Projection;
 

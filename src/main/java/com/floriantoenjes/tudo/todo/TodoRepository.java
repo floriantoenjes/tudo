@@ -6,6 +6,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.util.Optional;
+
 @PreAuthorize("hasRole('ROLE_ADMIN')")
 public interface TodoRepository extends CrudRepository<Todo, Long> {
 
@@ -14,13 +16,10 @@ public interface TodoRepository extends CrudRepository<Todo, Long> {
     <S extends Todo> S save(@Param("entity") S entity);
 
     @Override
-    <S extends Todo> Iterable<S> save(Iterable<S> entities);
-
-    @Override
     @PreAuthorize("permitAll()")
-    @PostAuthorize("returnObject != null && returnObject.creator.username == authentication.name " +
-            "|| returnObject != null && returnObject.isAssignedToUser(authentication.name)")
-    Todo findOne(Long aLong);
+    @PostAuthorize("returnObject.get() != null && returnObject.get().creator.username == authentication.name " +
+            "|| returnObject.get() != null && returnObject.get().isAssignedToUser(authentication.name)")
+    Optional<Todo> findById(Long aLong);
 
     @Override
     @PreAuthorize("(#entity != null && #entity.creator.username == authentication.name) || hasRole('ROLE_ADMIN')")

@@ -6,13 +6,15 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.util.Optional;
+
 @PreAuthorize("hasRole('ROLE_ADMIN')")
 public interface TodoListRepository extends CrudRepository<TodoList, Long> {
 
     @Override
     @PreAuthorize("permitAll()")
-    @PostAuthorize("returnObject != null && returnObject.creator.username == authentication.name")
-    TodoList findOne(Long aLong);
+    @PostAuthorize("returnObject.get() != null && returnObject.get().creator.username == authentication.name")
+    Optional<TodoList> findById(Long aLong);
 
     @Override
     @PreAuthorize("(#entity != null && #entity.creator.username == authentication.name) || hasRole('ROLE_ADMIN')")

@@ -6,6 +6,7 @@ import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
+import java.util.Optional;
 
 @PreAuthorize("hasRole('ROLE_ADMIN')")
 public interface ContactRequestRepository extends CrudRepository<ContactRequest, Long> {
@@ -24,9 +25,9 @@ public interface ContactRequestRepository extends CrudRepository<ContactRequest,
 
     @Override
     @PreAuthorize("permitAll()")
-    @PostAuthorize("returnObject != null && (returnObject.sender.username == authentication.name " +
-            "|| returnObject.receiver.username == authentication.name)")
-    ContactRequest findOne(@Param("contactRequestId") Long aLong);
+    @PostAuthorize("returnObject.get() != null && (returnObject.get().sender.username == authentication.name " +
+            "|| returnObject.get().receiver.username == authentication.name)")
+    Optional<ContactRequest> findById(@Param("contactRequestId") Long aLong);
 
     @Override
     @PreAuthorize("#entity.sender.username == authentication.name || #entity.receiver.username == authentication.name " +

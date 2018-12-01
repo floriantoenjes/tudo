@@ -31,7 +31,7 @@ public class TodoController {
     @PatchMapping("/todo-form/{todoId}")
     @Transactional
     public ResponseEntity<Todo> saveTodoForm(@Valid @RequestBody TodoForm todoForm, @PathVariable Long todoId) {
-        Todo todo = this.todoRepository.findOne(todoId);
+        Todo todo = this.todoRepository.findById(todoId).get();
         if (todo != null) {
             if (isUserAuthorized(todo)) {
                 todo.setProgress(todoForm.getProgress());

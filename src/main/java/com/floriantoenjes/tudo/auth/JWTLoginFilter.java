@@ -2,10 +2,15 @@ package com.floriantoenjes.tudo.auth;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.floriantoenjes.tudo.user.User;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -29,6 +34,12 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
             throws AuthenticationException, IOException, ServletException {
 
         AccountCredentials creds = new ObjectMapper().readValue(req.getInputStream(), AccountCredentials.class);
+
+        SecurityContextHolder.getContext()
+                .setAuthentication(
+                        new AnonymousAuthenticationToken("sign_in_user", "sign_in_user",
+                                AuthorityUtils.createAuthorityList("ROLE_USER", "ROLE_ADMIN"))
+                );
 
         return getAuthenticationManager().authenticate(
                 new UsernamePasswordAuthenticationToken(
