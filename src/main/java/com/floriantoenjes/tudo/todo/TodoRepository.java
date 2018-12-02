@@ -18,7 +18,8 @@ public interface TodoRepository extends CrudRepository<Todo, Long> {
     @Override
     @PreAuthorize("permitAll()")
     @PostAuthorize("returnObject.get() != null && returnObject.get().creator.username == authentication.name " +
-            "|| returnObject.get() != null && returnObject.get().isAssignedToUser(authentication.name)")
+            "|| returnObject.get() != null && returnObject.get().isAssignedToUser(authentication.name)" +
+            "|| hasRole('ROLE_ADMIN')")
     Optional<Todo> findById(Long aLong);
 
     @Override

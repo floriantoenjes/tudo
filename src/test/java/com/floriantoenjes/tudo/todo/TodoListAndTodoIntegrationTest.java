@@ -43,18 +43,18 @@ public class TodoListAndTodoIntegrationTest {
     @Test
     @DirtiesContext
     public void shouldAddTodoToTodoList() throws Exception {
-        mockMvc.perform(get("http://localhost/api/v1/todoLists/1/todos")
+        mockMvc.perform(get("http://localhost/api/v1/todoLists/9/todos")
                 .header("Authorization", getJwtToken(mockMvc, "user", "password"))
         .contentType("application/hal+json;charset=UTF-8"))
                 .andExpect(jsonPath("$._embedded.todos", hasSize(1)));
 
-        mockMvc.perform(put("/api/v1/todos/3/todoList")
+        mockMvc.perform(put("/api/v1/todos/12/todoList")
                 .header("Authorization", getJwtToken(mockMvc, "user", "password"))
                 .contentType("text/uri-list")
-        .content("/api/v1/todoLists/1"))
+        .content("/api/v1/todoLists/9"))
                 .andExpect(status().isNoContent());
 
-        mockMvc.perform(get("http://localhost/api/v1/todoLists/1/todos")
+        mockMvc.perform(get("http://localhost/api/v1/todoLists/9/todos")
                 .header("Authorization", getJwtToken(mockMvc, "user", "password"))
                 .contentType("application/hal+json;charset=UTF-8"))
                 .andExpect(jsonPath("$._embedded.todos", hasSize(2)));
@@ -63,35 +63,35 @@ public class TodoListAndTodoIntegrationTest {
     @Test
     @DirtiesContext
     public void shouldRemoveTodoFromTodoList() throws Exception {
-        mockMvc.perform(get("/api/v1/todos/1/todoList")
+        mockMvc.perform(get("/api/v1/todos/10/todoList")
                 .header("Authorization", getJwtToken(mockMvc, "user", "password")))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/hal+json;charset=UTF-8"));
 
-        mockMvc.perform(delete("/api/v1/todos/1/todoList")
+        mockMvc.perform(delete("/api/v1/todos/10/todoList")
                 .header("Authorization", getJwtToken(mockMvc, "user", "password")))
         .andExpect(status().isNoContent());
 
-        mockMvc.perform(get("/api/v1/todos/1/todoList")
+        mockMvc.perform(get("/api/v1/todos/10/todoList")
                 .header("Authorization", getJwtToken(mockMvc, "user", "password")))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     public void shouldNotAssignCreatorToTodo() throws Exception {
-        mockMvc.perform(put("/api/v1/todos/1/assignedUsers")
+        mockMvc.perform(put("/api/v1/todos/10/assignedUsers")
                 .header("Authorization", getJwtToken(mockMvc, "user", "password"))
                 .contentType("text/uri-list")
-                .content("/api/v1/users/2"))
+                .content("/api/v1/users/4"))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     public void shouldAssignUserToTodo() throws Exception {
-        mockMvc.perform(put("/api/v1/todos/1/assignedUsers")
+        mockMvc.perform(put("/api/v1/todos/10/assignedUsers")
                 .header("Authorization", getJwtToken(mockMvc, "user", "password"))
                 .contentType("text/uri-list")
-                .content("/api/v1/users/3"))
+                .content("/api/v1/users/5"))
                 .andExpect(status().isNoContent());
     }
 
