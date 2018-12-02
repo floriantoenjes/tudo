@@ -4,7 +4,11 @@ import com.floriantoenjes.tudo.todo.todoform.TodoForm;
 import com.floriantoenjes.tudo.user.User;
 import com.floriantoenjes.tudo.user.UserUtils;
 import org.springframework.data.rest.webmvc.BasePathAwareController;
+import org.springframework.data.rest.webmvc.RepositoryLinksResource;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
+import org.springframework.hateoas.ExposesResourceFor;
+import org.springframework.hateoas.ResourceProcessor;
+import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +22,7 @@ import java.util.Optional;
 
 @RepositoryRestController
 @BasePathAwareController
-public class TodoController {
+public class TodoController implements ResourceProcessor<RepositoryLinksResource> {
 
     private TodoRepository todoRepository;
 
@@ -58,4 +62,10 @@ public class TodoController {
                 || userUtils.getUser().getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
     }
 
+    @Override
+    public RepositoryLinksResource process(RepositoryLinksResource resource) {
+        resource.add(ControllerLinkBuilder.linkTo(TodoController.class).slash("todo-form")
+                .slash("todoId").withRel("todoForm"));
+        return resource;
+    }
 }
