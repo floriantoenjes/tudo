@@ -42,7 +42,7 @@ public class TodoListRepositoryTest {
 
     @Test
     public void findOneWithWrongUserShouldReturnUnauthorized() throws Exception {
-        mockMvc.perform(get("/api/v1/todoLists/1")
+        mockMvc.perform(get("/api/v1/todoLists/9")
         .header("Authorization", getJwtToken(mockMvc, "user2", "password")))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
@@ -50,7 +50,7 @@ public class TodoListRepositoryTest {
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     public void findOneWithCorrectUserShouldReturnTodo() throws Exception {
-        mockMvc.perform(get("/api/v1/todoLists/1")
+        mockMvc.perform(get("/api/v1/todoLists/9")
         .header("Authorization", getJwtToken(mockMvc,"user", "password")))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("application/hal+json;charset=UTF-8"));
@@ -66,7 +66,7 @@ public class TodoListRepositoryTest {
 
     @Test
     public void deleteWithWrongUserShouldReturnUnauthorized() throws Exception {
-        mockMvc.perform(delete("/api/v1/todoLists/1")
+        mockMvc.perform(delete("/api/v1/todoLists/9")
                 .header("Authorization", getJwtToken(mockMvc,"user2", "password")))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
@@ -74,7 +74,7 @@ public class TodoListRepositoryTest {
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     public void deleteWithCorrectUserShouldReturnOk() throws Exception {
-        mockMvc.perform(delete("/api/v1/todoLists/1")
+        mockMvc.perform(delete("/api/v1/todoLists/9")
                 .header("Authorization", getJwtToken(mockMvc,"user", "password")))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
@@ -96,7 +96,7 @@ public class TodoListRepositoryTest {
 
     @Test
     public void findAllByCreatorWithCorrectUserShouldReturnTodos() throws Exception {
-        mockMvc.perform(get("/api/v1/todoLists/search/findAllByCreator?creator=/api/v1/users/2")
+        mockMvc.perform(get("/api/v1/todoLists/search/findAllByCreator?creator=/api/v1/users/4")
                 .header("Authorization", getJwtToken(mockMvc,"user", "password")))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("application/hal+json;charset=UTF-8"));

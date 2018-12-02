@@ -55,9 +55,6 @@ public class RestConfig implements RepositoryRestConfigurer {
                 .addMapping("/**")
                 .allowedMethods("GET", "POST", "PUT", "DELETE");
 
-        config.exposeIdsFor(TodoForm.class);
-        config.exposeIdsFor(User.class);
-
         ExposureConfiguration exposureConfiguration = config.getExposureConfiguration();
         exposureConfiguration.forDomainType(User.class)
                 .withAssociationExposure((metdata, httpMethods) -> httpMethods.disable(HttpMethod.GET));

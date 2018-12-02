@@ -36,7 +36,7 @@ public class UserAndContactRequestIntegrationTest {
 
     @Test
     public void shouldNotAddContactWithoutContactRequest() throws Exception {
-        mockMvc.perform(put("/api/v1/users/2/contacts")
+        mockMvc.perform(put("/api/v1/users/4/contacts")
                 .header("Authorization", getJwtToken(mockMvc, "user", "password"))
                 .contentType("text/uri-list")
                 .content("/api/v1/users/4"))
@@ -45,10 +45,10 @@ public class UserAndContactRequestIntegrationTest {
 
     @Test
     public void shouldAddContactWithContactRequest() throws Exception {
-        mockMvc.perform(put("/api/v1/users/2/contacts")
+        mockMvc.perform(put("/api/v1/users/4/contacts")
                 .header("Authorization", getJwtToken(mockMvc, "user", "password"))
                 .contentType("text/uri-list")
-                .content("/api/v1/users/6"))
+                .content("/api/v1/users/8"))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 }

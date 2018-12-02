@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RepositoryRestController
 @BasePathAwareController
@@ -31,8 +32,9 @@ public class TodoController {
     @PatchMapping("/todo-form/{todoId}")
     @Transactional
     public ResponseEntity<Todo> saveTodoForm(@Valid @RequestBody TodoForm todoForm, @PathVariable Long todoId) {
-        Todo todo = this.todoRepository.findById(todoId).get();
-        if (todo != null) {
+        Optional<Todo> optTodo = this.todoRepository.findById(todoId);
+        if (optTodo.isPresent()) {
+            Todo todo = optTodo.get();
             if (isUserAuthorized(todo)) {
                 todo.setProgress(todoForm.getProgress());
                 todo.setCompleted(todoForm.isCompleted());
