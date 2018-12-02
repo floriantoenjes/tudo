@@ -15,8 +15,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static com.floriantoenjes.tudo.TestUtils.getJwtToken;
-import static org.junit.Assert.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
@@ -39,21 +37,21 @@ public class ContactRequestRepositoryTest {
 
     @Test
     public void findOneWithWrongUserShouldReturnUnauthorized() throws Exception {
-        mockMvc.perform(get("/api/v1/contactRequests/1")
+        mockMvc.perform(get("/api/v1/contactRequests/13")
         .header("Authorization", getJwtToken(mockMvc, "user3", "password")))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test
     public void findOneWithCorrectUserShouldReturnContactRequest() throws Exception {
-        mockMvc.perform(get("/api/v1/contactRequests/1")
+        mockMvc.perform(get("/api/v1/contactRequests/13")
                 .header("Authorization", getJwtToken(mockMvc, "user2", "password")))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     public void deleteWithWrongUserShouldReturnUnauthorized() throws Exception {
-        mockMvc.perform(delete("/api/v1/contactRequests/1")
+        mockMvc.perform(delete("/api/v1/contactRequests/13")
                 .header("Authorization", getJwtToken(mockMvc, "user3", "password")))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
@@ -61,7 +59,7 @@ public class ContactRequestRepositoryTest {
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void deleteWithCorrectUserShouldReturnOk() throws Exception {
-        mockMvc.perform(delete("/api/v1/contactRequests/1")
+        mockMvc.perform(delete("/api/v1/contactRequests/13")
                 .header("Authorization", getJwtToken(mockMvc, "user", "password")))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
