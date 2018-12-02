@@ -35,7 +35,7 @@ public class AddContactValidator implements Validator {
         for (User contact : user.getContacts()) {
             ContactRequest toUser = contactRequestRepository.findBySenderUsernameAndReceiverUsername(contact.getUsername(), user.getUsername());
             if (toUser != null) {
-                addContactAndSave(user, contact);
+                addContactAndSave(contact, user);
 
                 user.removeContactRequestReceived(toUser);
                 contact.removeContactRequestSent(toUser);
