@@ -153,6 +153,14 @@ public class User implements Identifiable<Long>, UserDetails {
         return contacts.remove(contact);
     }
 
+    public boolean removeContactRequestSent(ContactRequest contactRequest) {
+        return this.contactRequestsSent.remove(contactRequest);
+    }
+
+    public boolean removeContactRequestReceived(ContactRequest contactRequest) {
+        return this.contactRequestsReceived.remove(contactRequest);
+    }
+
     public boolean addContactRequestSent(ContactRequest contactRequest) {
         if (contactRequestsSent == null) {
             contactRequestsSent = new HashSet<>();
