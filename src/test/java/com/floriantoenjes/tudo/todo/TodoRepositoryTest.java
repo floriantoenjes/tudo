@@ -39,14 +39,14 @@ public class TodoRepositoryTest {
 
     @Test
     public void findOneWithWrongUserShouldReturnUnauthorized() throws Exception {
-        mockMvc.perform(get("/api/v1/todos/1")
+        mockMvc.perform(get("/api/v1/todos/10")
                 .header("Authorization", getJwtToken(mockMvc,"user2", "password")))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test
     public void findOneWithCorrectUserShouldReturnTodo() throws Exception {
-        mockMvc.perform(get("/api/v1/todos/1")
+        mockMvc.perform(get("/api/v1/todos/10")
                 .header("Authorization", getJwtToken(mockMvc,"user", "password")))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("application/hal+json;charset=UTF-8"));
@@ -55,7 +55,7 @@ public class TodoRepositoryTest {
 
     @Test
     public void deleteWithWrongUserShouldReturnUnauthorized() throws Exception {
-        mockMvc.perform(delete("/api/v1/todos/1")
+        mockMvc.perform(delete("/api/v1/todos/10")
                 .header("Authorization", getJwtToken(mockMvc,"user2", "password")))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
@@ -63,7 +63,7 @@ public class TodoRepositoryTest {
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void deleteWithCorrectUserShouldReturnOk() throws Exception {
-        mockMvc.perform(delete("/api/v1/todos/1")
+        mockMvc.perform(delete("/api/v1/todos/10")
                 .header("Authorization", getJwtToken(mockMvc,"user", "password")))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
@@ -92,7 +92,7 @@ public class TodoRepositoryTest {
 
     @Test
     public void findAllByCreatorWithCorrectUserShouldReturnTodos() throws Exception {
-        mockMvc.perform(get("/api/v1/todos/search/findAllByCreator?creator=/api/v1/users/2")
+        mockMvc.perform(get("/api/v1/todos/search/findAllByCreator?creator=/api/v1/users/4")
                 .header("Authorization", getJwtToken(mockMvc,"user", "password")))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("application/hal+json;charset=UTF-8"));
@@ -101,14 +101,14 @@ public class TodoRepositoryTest {
 
     @Test
     public void findAllByCreatorAndTagsWithWrongUserAndExistingTagShouldReturnUnauthorized() throws Exception {
-        mockMvc.perform(get("/api/v1/todos/search/findAllByCreatorAndTags?creator=/api/v1/users/1&tag=tag")
+        mockMvc.perform(get("/api/v1/todos/search/findAllByCreatorAndTags?creator=/api/v1/users/3&tag=tag")
                 .header("Authorization", getJwtToken(mockMvc,"user2", "password")))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test
     public void findAllByCreatorAndTagsWithCorrectUserAndNotExistingTagShouldReturnEmpty() throws Exception {
-        mockMvc.perform(get("/api/v1/todos/search/findAllByCreatorAndTags?creator=/api/v1/users/2&tag=invalid")
+        mockMvc.perform(get("/api/v1/todos/search/findAllByCreatorAndTags?creator=/api/v1/users/4&tag=invalid")
                 .header("Authorization", getJwtToken(mockMvc,"user", "password")))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$._embedded.todos", hasSize(0)));
@@ -116,7 +116,7 @@ public class TodoRepositoryTest {
 
     @Test
     public void findAllByCreatorAndTagsWithCorrectUserAndExistingTagShouldReturnTodos() throws Exception {
-        mockMvc.perform(get("/api/v1/todos/search/findAllByCreatorAndTags?creator=/api/v1/users/2&tag=tag")
+        mockMvc.perform(get("/api/v1/todos/search/findAllByCreatorAndTags?creator=/api/v1/users/4&tag=tag")
                 .header("Authorization", getJwtToken(mockMvc,"user", "password")))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("application/hal+json;charset=UTF-8"));
