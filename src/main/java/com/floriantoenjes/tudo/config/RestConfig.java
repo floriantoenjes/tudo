@@ -58,5 +58,7 @@ public class RestConfig implements RepositoryRestConfigurer {
         ExposureConfiguration exposureConfiguration = config.getExposureConfiguration();
         exposureConfiguration.forDomainType(User.class)
                 .withAssociationExposure((metdata, httpMethods) -> httpMethods.disable(HttpMethod.GET));
+        exposureConfiguration.forDomainType(User.class)
+                .withItemExposure((metdata, httpMethods) -> httpMethods.disable(HttpMethod.PATCH, HttpMethod.PUT));
     }
 }

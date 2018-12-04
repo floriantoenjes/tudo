@@ -36,10 +36,8 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
     @PreAuthorize("permitAll()")
     Optional<User> findById(Long aLong);
 
-    // TODO: Find a way to permit contacts to get added by the AddContactValidator and still have a secure method
     @Override
-//    @PreAuthorize("#entity != null && #entity.username == authentication.name || hasRole('ROLE_ADMIN')")
     @PreAuthorize("permitAll()")
-    @RestResource(exported = false)
+//    @RestResource(exported = false)
     <S extends User> S save(@Param("entity") S entity);
 }
