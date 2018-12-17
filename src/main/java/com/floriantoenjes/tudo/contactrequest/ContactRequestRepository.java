@@ -25,8 +25,8 @@ public interface ContactRequestRepository extends CrudRepository<ContactRequest,
 
     @Override
     @PreAuthorize("permitAll()")
-    @PostAuthorize("returnObject.get() != null && (returnObject.get().sender.username == authentication.name " +
-            "|| returnObject.get().receiver.username == authentication.name)")
+    @PostAuthorize("returnObject.isPresent() && (returnObject.get().sender.username == authentication.name " +
+            "|| returnObject.get().receiver.username == authentication.name) || hasRole('ROLE_ADMIN')")
     Optional<ContactRequest> findById(@Param("contactRequestId") Long aLong);
 
     @Override

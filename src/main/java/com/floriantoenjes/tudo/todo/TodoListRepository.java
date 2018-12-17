@@ -13,7 +13,7 @@ public interface TodoListRepository extends CrudRepository<TodoList, Long> {
 
     @Override
     @PreAuthorize("permitAll()")
-    @PostAuthorize("returnObject.get() != null && returnObject.get().creator.username == authentication.name || hasRole('ROLE_ADMIN')")
+    @PostAuthorize("returnObject.isPresent() && returnObject.get().creator.username == authentication.name || hasRole('ROLE_ADMIN')")
     Optional<TodoList> findById(Long aLong);
 
     @Override
